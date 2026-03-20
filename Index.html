@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0A0A0F">
+<title>TapConnect — Business Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   TAPCONNECT — CUSTOMER INTERFACE
+   Design: Luxury Dark · Warm Amber + Cream
+   ════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  /* Core Palette */
+  --ink:     #0A0A0F;
+  --ink2:    #12121A;
+  --ink3:    #1A1A28;
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.13);
+
+  /* Accent — warm amber/gold */
+  --a1: #F5A623;
+  --a2: #FFCD6B;
+  --a3: rgba(245,166,35,0.15);
+
+  /* Text */
+  --tx:  #F5F0E8;
+  --tx2: #9A9080;
+  --tx3: #4A4035;
+
+  /* Status */
+  --gn:  #22C55E;
+  --rd:  #F43F5E;
+  --bl:  #38BDF8;
+  --pu:  #A78BFA;
+
+  /* Sector accent (overridden per sector) */
+  --sec: #F5A623;
+  --sec2: rgba(245,166,35,0.12);
+  --sec-text: #F5A623;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--ink);
+  color:var(--tx);
+  min-height:100vh;
+  padding-bottom:90px;
+  max-width:430px;
+  margin:0 auto;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* ── SECTOR PICKER ───────────────────────── */
+.sector-picker{
+  padding:20px 16px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.picker-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+}
+.brand-dot{
+  width:32px;height:32px;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.brand-name{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;
+  letter-spacing:-0.3px;
+}
+.brand-name span{color:var(--a1)}
+.picker-sub{font-size:12px;color:var(--tx2);margin-bottom:24px}
+.picker-title{
+  font-size:15px;font-weight:700;
+  margin-bottom:14px;
+  letter-spacing:-0.2px;
+}
+.picker-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+.picker-item{
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 6px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.picker-item:active{transform:scale(0.93);background:var(--ink3)}
+.picker-item:hover{border-color:var(--border2)}
+.pi-icon{font-size:24px;margin-bottom:6px}
+.pi-label{font-size:9px;font-weight:600;color:var(--tx2);line-height:1.3}
+
+/* ── MAIN PROFILE ────────────────────────── */
+#profile-view{display:none}
+
+/* HERO */
+.hero{
+  min-height:260px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:20px 16px;
+}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-noise{
+  position:absolute;inset:0;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.6;
+}
+.hero-grad{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(180deg,rgba(10,10,15,0.1) 0%,rgba(10,10,15,0.6) 55%,rgba(10,10,15,1) 100%);
+}
+.hero-content{position:relative;z-index:3}
+
+.verified-badge{
+  position:absolute;top:16px;right:16px;z-index:4;
+  background:rgba(34,197,94,0.12);
+  border:1px solid rgba(34,197,94,0.3);
+  border-radius:100px;
+  padding:4px 10px;
+  font-size:10px;font-weight:700;
+  color:var(--gn);
+  display:flex;align-items:center;gap:4px;
+}
+.vb-dot{width:5px;height:5px;border-radius:50%;background:var(--gn);animation:glow 2s infinite}
+
+.business-avatar{
+  width:68px;height:68px;
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;
+  border:2px solid rgba(255,255,255,0.12);
+  margin-bottom:10px;
+  backdrop-filter:blur(10px);
+}
+.business-name{
+  font-family:'DM Serif Display',serif;
+  font-size:26px;
+  letter-spacing:-0.5px;
+  line-height:1.1;
+  margin-bottom:4px;
+}
+.business-tagline{
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+  margin-bottom:10px;
+  line-height:1.4;
+}
+.sector-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px;
+  padding:3px 11px;
+  font-size:10px;font-weight:600;
+  color:rgba(255,255,255,0.7);
+}
+
+/* NFC SIGNAL */
+.nfc-strip{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+}
+.nfc-animation{
+  position:relative;
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+}
+.nfc-ring{
+  position:absolute;
+  border-radius:50%;
+  border:1.5px solid var(--a1);
+  animation:expand 2.4s ease-out infinite;
+}
+.nfc-ring:nth-child(1){inset:8px;opacity:0.9;animation-delay:0s}
+.nfc-ring:nth-child(2){inset:3px;opacity:0.55;animation-delay:0.7s}
+.nfc-ring:nth-child(3){inset:-2px;opacity:0.2;animation-delay:1.4s}
+.nfc-icon-inner{font-size:12px;position:relative;z-index:2}
+.nfc-label{font-size:10px;font-weight:600;color:var(--a1)}
+
+/* SAVE TO PHONE */
+.install-bar{
+  margin:10px 14px;
+  background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(255,140,0,0.05));
+  border:1px solid rgba(245,166,35,0.22);
+  border-radius:14px;
+  padding:11px 13px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
+}
+.install-bar:active{opacity:0.85}
+.install-icon{
+  width:38px;height:38px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;
+  flex-shrink:0;
+}
+.install-text strong{display:block;font-size:11px;font-weight:700;color:var(--a2);margin-bottom:1px}
+.install-text span{font-size:9px;color:var(--tx2);line-height:1.4}
+.install-btn{
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  color:#000;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:9px;font-weight:800;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:0.3px;
+}
+
+/* QUICK ACTIONS */
+.quick-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:0 14px 12px;
+}
+.qa-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 4px;
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  cursor:pointer;transition:all 0.15s;
+}
+.qa-btn:active{transform:scale(0.92);background:var(--ink3)}
+.qa-icon{font-size:17px}
+.qa-label{font-size:8px;font-weight:600;color:var(--tx2);letter-spacing:0.2px}
+
+/* TABS */
+.tab-bar{
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:0 14px;
+  gap:4px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+  background:var(--ink);
+  z-index:50;
+  padding-bottom:1px;
+}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:10px 14px;
+  background:none;border:none;
+  color:var(--tx2);
+  font-size:11px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;
+  font-family:'DM Sans',sans-serif;
+  flex-shrink:0;
+  transition:all 0.2s;
+  letter-spacing:0.2px;
+}
+.tab-btn.active{
+  color:var(--sec-text);
+  border-bottom-color:var(--sec-text);
+}
+
+/* TAB CONTENT */
+.tab-content{display:none;padding:14px}
+.tab-content.active{display:block}
+
+/* ── MENU ────────────────────────────────── */
+.search-wrap{
+  position:relative;
+  margin-bottom:14px;
+}
+.search-input{
+  width:100%;
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 14px 10px 38px;
+  color:var(--tx);
+  font-size:12px;
+  font-family:'DM Sans',sans-serif;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.search-input:focus{border-color:rgba(245,166,35,0.35)}
+.search-input::placeholder{color:var(--tx2)}
+.search-icon{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:14px;pointer-events:none;
+}
+.category-label{
+  font-size:12px;font-weight:800;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  color:var(--sec-text);
+  display:flex;align-items:center;gap:7px;
+}
+.category-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,var(--sec),transparent);
+}
+.menu-card{
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  display:flex;gap:11px;
+  margin-bottom:9px;
+  transition:all 0.15s;
+  cursor:default;
+}
+.menu-card.selected{
+  border-color:rgba(245,166,35,0.4);
+  background:rgba(245,166,35,0.05);
+}
+.menu-emoji{
+  width:58px;height:58px;
+  border-radius:12px;
+  background:var(--ink3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  flex-shrink:0;
+}
+.menu-info{flex:1;min-width:0}
+.menu-name{font-size:12px;font-weight:700;margin-bottom:2px;letter-spacing:-0.1px}
+.menu-desc{font-size:10px;color:var(--tx2);line-height:1.45;margin-bottom:6px}
+.menu-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px}
+.t-veg{background:rgba(34,197,94,0.1);color:#4ADE80;border:1px solid rgba(34,197,94,0.2)}
+.t-hot{background:rgba(244,63,94,0.1);color:#FB7185;border:1px solid rgba(244,63,94,0.2)}
+.t-pop{background:rgba(245,166,35,0.1);color:var(--a1);border:1px solid rgba(245,166,35,0.2)}
+.t-gf{background:rgba(167,139,250,0.1);color:var(--pu);border:1px solid rgba(167,139,250,0.2)}
+.menu-row{display:flex;align-items:center;justify-content:space-between}
+.menu-price{font-size:15px;font-weight:800;color:var(--a1);font-family:'DM Serif Display',serif}
+.qty-row{display:flex;align-items:center;gap:6px}
+.qty-btn{
+  width:26px;height:26px;
+  border-radius:50%;
+  border:1px solid rgba(245,166,35,0.3);
+  background:transparent;
+  color:var(--a1);
+  font-size:14px;font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.1s;
+}
+.qty-btn:active{transform:scale(0.85);background:rgba(245,166,35,0.1)}
+.qty-num{font-size:12px;font-weight:700;min-width:16px;text-align:center}
+
+/* ORDER STATUS */
+.status-card{
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 16px;
+  text-align:center;
+}
+.status-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:4px}
+.status-sub{font-size:11px;color:var(--tx2);margin-bottom:20px;line-height:1.5}
+.status-track{display:flex;align-items:center;justify-content:center}
+.status-step{display:flex;flex-direction:column;align-items:center;gap:4px}
+.step-dot{
+  width:34px;height:34px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+  border:2px solid var(--border);
+  transition:all 0.4s;
+}
+.step-dot.done{border-color:var(--gn);background:rgba(34,197,94,0.12)}
+.step-dot.active{border-color:var(--a1);background:rgba(245,166,35,0.12);animation:ring 2s infinite}
+.step-dot.pend{opacity:0.35}
+.step-line{width:28px;height:2px;background:var(--border);margin-bottom:18px;transition:background 0.4s}
+.step-line.done{background:var(--gn)}
+.step-label{font-size:8px;color:var(--tx2);text-align:center;max-width:50px;line-height:1.3}
+.status-items{
+  margin-top:14px;
+  background:var(--ink3);
+  border-radius:10px;
+  padding:10px;
+  font-size:10px;color:var(--tx2);
+  text-align:left;line-height:1.8;
+}
+
+/* BILL */
+.bill-card{
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+.bill-head{
+  padding:13px 14px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(245,166,35,0.08),transparent);
+}
+.bill-title{font-size:14px;font-weight:800;margin-bottom:1px}
+.bill-sub{font-size:9px;color:var(--tx2)}
+.bill-rows{padding:10px 14px}
+.bill-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:11px;
+}
+.bill-row:last-child{border-bottom:none}
+.bill-item-name{font-weight:500}
+.bill-item-qty{font-size:9px;color:var(--tx2);margin-top:1px}
+.bill-price{font-weight:700;color:var(--a1)}
+.bill-totals{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border-top:1px solid var(--border);
+}
+.bill-cell{background:var(--ink2);padding:10px 12px}
+.bill-cell-label{font-size:8px;color:var(--tx2);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.bill-cell-val{font-size:15px;font-weight:800}
+.bill-cell-val.highlight{color:var(--a1)}
+.pay-now-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  color:#000;
+  border:none;
+  padding:14px;
+  border-radius:12px;
+  font-size:13px;font-weight:800;
+  cursor:pointer;
+  margin-bottom:9px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:-0.2px;
+}
+.pay-now-btn:active{opacity:0.9}
+.pay-methods{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pay-m{
+  background:var(--ink2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:9px 4px;
+  text-align:center;
+  cursor:pointer;
+  font-size:9px;font-weight:600;color:var(--tx2);
+  transition:all 0.15s;
+}
+.pay-m:active{border-color:rgba(245,166,35,0.3);color:var(--a1)}
+.pay-m-icon{font-size:16px;margin-bottom:2px}
+
+/* REVIEW */
+.review-hero{
+  background:linear-gradient(145deg,var(--ink2),var(--ink3));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  text-align:center;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.review-hero::before{
+  content:'';
+  position:absolute;top:-40px;right:-40px;
+  width:120px;height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,0.1),transparent 70%);
+}
+.stars{font-size:24px;margin-bottom:10px;letter-spacing:3px;position:relative;z-index:1}
+.review-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:5px;position:relative;z-index:1}
+.review-body{font-size:11px;color:var(--tx2);margin-bottom:14px;line-height:1.6;position:relative;z-index:1}
+.google-btn{
+  width:100%;
+  background:linear-gradient(135deg,#4285F4,#EA4335);
+  color:#fff;
+  border:none;padding:13px;border-radius:12px;
+  font-size:12px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  margin-bottom:7px;font-family:'DM Sans',sans-serif;
+}
+.google-btn:active{opacity:0.9}
+.share-btn{
+  width:100%;
+  background:var(--ink3);
+  border:1px solid var(--border);color:var(--tx);
+  padding:12px;border-radius:12px;
+  font-size:11px;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+}
+.reviews-list{margin-top:14px}
+.review-card{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin-bottom:8px;
+}
+.rc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.rc-name{font-size:12px;font-weight:700}
+.rc-stars{font-size:11px;color:var(--a1)}
+.rc-text{font-size:11px;color:var(--tx2);line-height:1.55}
+
+/* INFO */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.info-cell{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:12px;padding:11px;
+}
+.ic-label{font-size:8px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.ic-val{font-size:11px;line-height:1.6}
+.ic-val a{color:var(--a1);text-decoration:none}
+.social-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.social-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:11px 12px;
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:12px;
+  font-size:11px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
+  text-decoration:none;color:var(--tx);
+}
+.social-btn:active{transform:scale(0.96);background:var(--ink3)}
+
+/* SECTOR PANELS */
+.section-head{
+  font-size:12px;font-weight:800;
+  letter-spacing:0.5px;text-transform:uppercase;
+  color:var(--sec-text);
+  margin-bottom:11px;
+  display:flex;align-items:center;gap:7px;
+}
+.section-head::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--sec),transparent)}
+.trainer-card{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:14px;padding:13px;
+  display:flex;gap:12px;align-items:flex-start;
+  margin-bottom:9px;
+}
+.trainer-avatar{
+  width:50px;height:50px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.trainer-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.trainer-spec{font-size:10px;color:var(--tx2);margin-bottom:8px;line-height:1.4}
+.trainer-btns{display:flex;gap:6px}
+.t-btn-p{
+  padding:6px 12px;border-radius:8px;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  color:#000;border:none;font-size:10px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+}
+.t-btn-s{
+  padding:6px 12px;border-radius:8px;
+  background:rgba(34,197,94,0.1);color:var(--gn);
+  border:1px solid rgba(34,197,94,0.2);
+  font-size:10px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;
+}
+.class-row{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:12px;padding:11px 13px;
+  display:flex;align-items:center;gap:11px;
+  margin-bottom:7px;
+}
+.class-time{font-size:11px;font-weight:700;color:var(--sec-text);width:52px;flex-shrink:0}
+.class-name{font-size:12px;font-weight:600;flex:1}
+.class-spots{font-size:10px;color:var(--tx2);margin-top:1px}
+.class-book-btn{
+  background:var(--sec);color:#000;border:none;
+  padding:6px 11px;border-radius:8px;font-size:10px;font-weight:700;
+  cursor:pointer;flex-shrink:0;font-family:'DM Sans',sans-serif;
+}
+.service-row{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:12px;padding:11px 13px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.srv-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.srv-dur{font-size:10px;color:var(--tx2)}
+.srv-price{font-size:15px;font-weight:800;color:var(--sec-text);font-family:'DM Serif Display',serif;margin-right:10px;flex-shrink:0}
+.srv-book{
+  background:var(--sec2);color:var(--sec-text);
+  border:1px solid var(--sec);
+  padding:5px 11px;border-radius:8px;font-size:10px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+}
+.loyalty-card{
+  background:linear-gradient(145deg,rgba(245,166,35,0.1),rgba(245,166,35,0.03));
+  border:1px solid rgba(245,166,35,0.2);
+  border-radius:16px;padding:16px;margin-bottom:14px;
+}
+.loyalty-title{font-size:14px;font-weight:800;color:var(--a2);margin-bottom:3px}
+.loyalty-sub{font-size:10px;color:var(--tx2);margin-bottom:12px;line-height:1.5}
+.stamps{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.stamp{
+  width:33px;height:33px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:all 0.2s;
+}
+.stamp.earned{background:rgba(245,166,35,0.2);border:2px solid rgba(245,166,35,0.5)}
+.stamp.empty{border:2px dashed rgba(255,255,255,0.1)}
+.stamp.reward{background:rgba(34,197,94,0.12);border:2px solid rgba(34,197,94,0.3)}
+.loyalty-progress{font-size:10px;color:var(--tx2)}
+
+/* CTA BUTTONS */
+.cta-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  color:#000;border:none;
+  padding:13px;border-radius:12px;
+  font-size:13px;font-weight:800;
+  cursor:pointer;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:-0.2px;
+}
+.cta-btn:active{opacity:0.9;transform:scale(0.99)}
+.cta-wa{
+  width:100%;
+  background:rgba(37,211,102,0.1);
+  color:#25D366;
+  border:1px solid rgba(37,211,102,0.25);
+  padding:12px;border-radius:12px;
+  font-size:12px;font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;
+}
+.panel{
+  background:var(--ink2);border:1px solid var(--border);
+  border-radius:14px;padding:14px;margin-bottom:10px;
+}
+.panel-title{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:-0.1px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-box{
+  background:var(--ink3);border:1px solid var(--border);
+  border-radius:11px;padding:13px;text-align:center;
+}
+.stat-val{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:2px;color:var(--sec-text)}
+.stat-lbl{font-size:9px;color:var(--tx2);line-height:1.3}
+.form-label{display:block;font-size:9px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.form-input{
+  width:100%;
+  background:var(--ink3);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;
+  color:var(--tx);font-size:12px;outline:none;
+  margin-bottom:10px;font-family:'DM Sans',sans-serif;
+  transition:border-color 0.2s;
+}
+.form-input:focus{border-color:rgba(245,166,35,0.4)}
+.form-input::placeholder{color:var(--tx2)}
+.form-ta{height:54px;resize:none}
+.powered{
+  text-align:center;padding:20px;font-size:10px;color:var(--tx3);
+  border-top:1px solid var(--border);margin-top:10px;
+}
+.powered a{color:var(--a1);text-decoration:none}
+
+/* CART BAR */
+.cart-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  max-width:430px;margin:0 auto;
+  padding:10px 14px 16px;
+  background:var(--ink);
+  border-top:1px solid var(--border);
+  z-index:100;display:none;
+}
+.cart-bar.visible{display:block}
+.cart-inner{
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  border-radius:12px;
+  padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;
+  box-shadow:0 -6px 24px rgba(245,166,35,0.2);
+}
+.cart-inner:active{opacity:0.92}
+.cart-count{font-size:10px;font-weight:600;color:rgba(0,0,0,0.6);margin-bottom:1px}
+.cart-label{font-size:13px;font-weight:800;color:#000}
+.cart-total{font-size:17px;font-weight:800;color:#000}
+
+/* ORDER MODAL */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.8);
+  z-index:200;display:none;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(6px);
+  max-width:430px;margin:0 auto;
+}
+.modal-overlay.open{display:flex}
+.modal-sheet{
+  background:var(--ink2);
+  border-radius:20px 20px 0 0;
+  padding:20px 16px;
+  width:100%;
+  max-height:85vh;
+  overflow-y:auto;
+  border-top:1px solid rgba(245,166,35,0.2);
+}
+.modal-handle{
+  width:36px;height:3px;
+  background:rgba(255,255,255,0.15);
+  border-radius:2px;margin:0 auto 16px;
+}
+.modal-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:3px}
+.modal-sub{font-size:11px;color:var(--tx2);margin-bottom:14px}
+.order-item-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 11px;
+  background:var(--ink3);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:6px;
+}
+.oi-em{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+.oi-name{font-size:12px;font-weight:600;flex:1}
+.oi-qty{font-size:9px;color:var(--tx2);margin-top:1px}
+.oi-price{font-size:12px;font-weight:700;color:var(--a1)}
+.total-line{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 0;border-top:1px solid var(--border);margin-bottom:14px;
+}
+.total-line-label{font-size:12px;color:var(--tx2)}
+.total-line-val{font-family:'DM Serif Display',serif;font-size:24px;color:var(--a1)}
+.place-order-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--a1),#FF8C00);
+  color:#000;border:none;padding:14px;border-radius:12px;
+  font-size:13px;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;
+}
+.place-order-btn:active{opacity:0.9}
+.cancel-order-btn{
+  width:100%;background:transparent;
+  border:1px solid var(--border);color:var(--tx2);
+  padding:12px;border-radius:10px;font-size:11px;font-weight:600;
+  cursor:pointer;margin-top:7px;font-family:'DM Sans',sans-serif;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(70px);
+  background:linear-gradient(135deg,#1A3A2A,#143022);
+  color:var(--gn);
+  border:1px solid rgba(34,197,94,0.25);
+  padding:10px 20px;border-radius:100px;
+  font-size:11px;font-weight:700;
+  z-index:999;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ANIMATIONS */
+@keyframes expand{
+  0%{transform:scale(0.8);opacity:1}
+  100%{transform:scale(1.2);opacity:0}
+}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}
+  50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}
+}
+@keyframes ring{
+  0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,0.35)}
+  50%{box-shadow:0 0 0 6px rgba(245,166,35,0)}
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.tab-content.active{animation:fadeInUp 0.25s ease}
+
+/* Sector colour overrides */
+.sec-restaurant{--sec:#F5A623;--sec2:rgba(245,166,35,0.1);--sec-text:#F5A623}
+.sec-gym{--sec:#22C55E;--sec2:rgba(34,197,94,0.1);--sec-text:#4ADE80}
+.sec-salon{--sec:#A78BFA;--sec2:rgba(167,139,250,0.1);--sec-text:#C4B5FD}
+.sec-cafe{--sec:#FB923C;--sec2:rgba(251,146,60,0.1);--sec-text:#FDBA74}
+.sec-driving{--sec:#38BDF8;--sec2:rgba(56,189,248,0.1);--sec-text:#7DD3FC}
+.sec-estate{--sec:#06B6D4;--sec2:rgba(6,182,212,0.1);--sec-text:#67E8F9}
+.sec-wedding{--sec:#F5A623;--sec2:rgba(245,166,35,0.1);--sec-text:#FCD34D}
+.sec-wholesale{--sec:#06B6D4;--sec2:rgba(6,182,212,0.1);--sec-text:#67E8F9}
+</style>
+</head>
+<body>
+
+<!-- SECTOR PICKER -->
+<div id="sector-picker" class="sector-picker">
+  <div class="picker-brand">
+    <div class="brand-dot">⚡</div>
+    <div class="brand-name">Tap<span>Connect</span></div>
+  </div>
+  <p class="picker-sub">Smart NFC Platform for UK Businesses</p>
+  <p class="picker-title">📱 Select a business to preview:</p>
+  <div class="picker-grid">
+    <div class="picker-item" onclick="loadBusiness('restaurant')">
+      <div class="pi-icon">🍽️</div><div class="pi-label">Restaurant</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('gym')">
+      <div class="pi-icon">🏋️</div><div class="pi-label">Gym / PT</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('salon')">
+      <div class="pi-icon">💈</div><div class="pi-label">Salon</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('cafe')">
+      <div class="pi-icon">☕</div><div class="pi-label">Cafe</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('driving')">
+      <div class="pi-icon">🚗</div><div class="pi-label">Driving</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('estate')">
+      <div class="pi-icon">🏠</div><div class="pi-label">Estate</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('wedding')">
+      <div class="pi-icon">📸</div><div class="pi-label">Wedding</div>
+    </div>
+    <div class="picker-item" onclick="loadBusiness('wholesale')">
+      <div class="pi-icon">🏭</div><div class="pi-label">Wholesale</div>
+    </div>
+  </div>
+  <div style="margin-top:auto;padding-top:24px;font-size:10px;color:var(--tx2);text-align:center">
+    In production, this page loads automatically from the NFC tap URL<br>
+    e.g. tapconnect.co.uk/b/spice-garden
+  </div>
+</div>
+
+<!-- MAIN PROFILE VIEW -->
+<div id="profile-view">
+  <!-- HERO -->
+  <div class="hero" id="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-grad"></div>
+    <div class="verified-badge"><span class="vb-dot"></span>Verified Business</div>
+    <div class="hero-content">
+      <div class="business-avatar" id="biz-avatar">🍽️</div>
+      <div class="business-name" id="biz-name">Business Name</div>
+      <div class="business-tagline" id="biz-tagline">Tagline here</div>
+      <div class="sector-pill" id="biz-type">Type</div>
+    </div>
+  </div>
+
+  <!-- NFC STRIP -->
+  <div class="nfc-strip">
+    <div class="nfc-animation">
+      <div class="nfc-ring"></div>
+      <div class="nfc-ring"></div>
+      <div class="nfc-ring"></div>
+      <span class="nfc-icon-inner">📡</span>
+    </div>
+    <span class="nfc-label" id="nfc-label">NFC Active</span>
+  </div>
+
+  <!-- INSTALL BAR -->
+  <div class="install-bar" onclick="toast('Tap your browser menu → Add to Home Screen to save!')">
+    <div class="install-icon">📲</div>
+    <div class="install-text">
+      <strong>Save to Your Phone — Free</strong>
+      <span>Access menu, orders & more without tapping again</span>
+    </div>
+    <button class="install-btn">Save App</button>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions" id="quick-actions"></div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar" id="tab-bar"></div>
+
+  <!-- TAB CONTENTS -->
+  <div id="tab-body"></div>
+</div>
+
+<!-- CART BAR -->
+<div class="cart-bar" id="cart-bar">
+  <div class="cart-inner" onclick="openOrderModal()">
+    <div>
+      <div class="cart-count" id="cart-count-text">0 items selected</div>
+      <div class="cart-label">Place Order</div>
+    </div>
+    <div class="cart-total" id="cart-total-text">£0.00 →</div>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Your Order</div>
+    <div class="modal-sub">Review items before sending to kitchen</div>
+    <div id="modal-items"></div>
+    <label class="form-label">Table / Your Name</label>
+    <input class="form-input" id="table-input" placeholder="e.g. Table 4 or Ahmed" value="Table 4">
+    <label class="form-label">Special Notes (Optional)</label>
+    <textarea class="form-input form-ta" id="order-notes" placeholder="No onions, extra spicy, nut allergy..."></textarea>
+    <div class="total-line">
+      <div class="total-line-label">Order Total</div>
+      <div class="total-line-val" id="modal-total">£0.00</div>
+    </div>
+    <button class="place-order-btn" onclick="placeOrder()">🍽️ Place Order — Send to Kitchen</button>
+    <button class="cancel-order-btn" onclick="closeOrderModal()">← Keep Adding Items</button>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// TAPCONNECT — Customer Interface v1.0
+// tapconnect.co.uk
+// ═══════════════════════════════════════════════
+
+const BUSINESSES = {
+  restaurant:{
+    name:"Spice Garden Restaurant",tagline:"Authentic Indian Cuisine · Leicester City Centre",
+    type:"🌶️ Indian · Halal · Dine-in & Takeaway",emoji:"🍽️",sector:"restaurant",
+    accent:"#F5A623",bg:"linear-gradient(160deg,#2A1800 0%,#1A1000 40%,#0A0A0F 100%)",
+    phone:"01162345678",whatsapp:"447911234567",website:"https://spicegarden.co.uk",
+    instagram:"spicegarden_lcr",google_review:"https://g.page/r/example",
+    address:"12 Belgrave Road, Leicester LE4 6AR",
+    hours:["Mon–Thu  11am – 10pm","Fri–Sat   11am – 11pm","Sunday   12pm – 9:30pm"],
+    tabs:["menu","my-order","bill","review","info"],
+    tab_labels:["🍽️ Menu","🔔 Order","🧾 Bill","⭐ Review","ℹ️ Info"],
+    ql:[{i:"📋",l:"Menu",t:"menu"},{i:"🔔",l:"My Order",t:"my-order"},{i:"🧾",l:"Bill",t:"bill"},{i:"⭐",l:"Review",t:"review"}],
+    menu:[
+      {cat:"🥗 Starters",items:[
+        {id:1,n:"Onion Bhaji",d:"Crispy spiced fritters, mint chutney",p:5.99,e:"🧅",tags:["veg"]},
+        {id:2,n:"Seekh Kebab",d:"Minced lamb skewers in herbs & spices",p:7.99,e:"🍢",tags:["hot"]},
+        {id:3,n:"Chicken Tikka",d:"Tender chicken in tandoor spices",p:8.99,e:"🍗",tags:["hot","pop"]},
+        {id:4,n:"Samosa (2 pcs)",d:"Crispy pastry, spiced potato & peas",p:4.99,e:"🔶",tags:["veg"]},
+      ]},
+      {cat:"🍛 Main Course",items:[
+        {id:5,n:"Butter Chicken",d:"Rich creamy tomato curry",p:14.99,e:"🍛",tags:["pop"]},
+        {id:6,n:"Tikka Masala",d:"Spiced tomato cream sauce",p:13.99,e:"🍲",tags:["pop","hot"]},
+        {id:7,n:"Lamb Rogan Josh",d:"Slow cooked in Kashmiri spices",p:15.99,e:"🥘",tags:["hot"]},
+        {id:8,n:"Paneer Makhani",d:"Cottage cheese in butter tomato",p:12.99,e:"🟨",tags:["veg"]},
+        {id:9,n:"Prawn Masala",d:"King prawns, fragrant sauce",p:16.99,e:"🍤",tags:[]},
+      ]},
+      {cat:"🫓 Breads & Rice",items:[
+        {id:10,n:"Garlic Naan",d:"Soft leavened bread with garlic",p:2.99,e:"🫓",tags:["veg"]},
+        {id:11,n:"Peshwari Naan",d:"Sweet coconut & almond naan",p:3.49,e:"🍞",tags:["veg"]},
+        {id:12,n:"Pilau Rice",d:"Fragrant basmati with spices",p:3.49,e:"🍚",tags:["veg","gf"]},
+      ]},
+      {cat:"🥤 Drinks & Desserts",items:[
+        {id:13,n:"Mango Lassi",d:"Sweet yoghurt with Alphonso mango",p:3.99,e:"🥭",tags:["veg"]},
+        {id:14,n:"Masala Chai",d:"Spiced tea with cardamom",p:2.99,e:"☕",tags:["veg"]},
+        {id:15,n:"Gulab Jamun",d:"Milk dumplings in rose syrup",p:4.99,e:"🟤",tags:["veg"]},
+      ]},
+    ]
+  },
+  gym:{
+    name:"FitZone Leicester",tagline:"Premium Fitness · Belgrave Road · Est. 2018",
+    type:"💪 Gym · PT · Classes · Nutrition",emoji:"🏋️",sector:"gym",
+    accent:"#22C55E",bg:"linear-gradient(160deg,#001A0D 0%,#001008 40%,#0A0A0F 100%)",
+    phone:"01162345679",whatsapp:"447911234568",instagram:"fitzone_lcr",
+    google_review:"https://g.page/r/example2",
+    address:"45 Narborough Road, Leicester LE3 0LA",
+    hours:["Mon–Fri  5:30am – 11pm","Sat–Sun  7am – 9pm"],
+    tabs:["trainers","classes","review","info"],
+    tab_labels:["💪 Trainers","📅 Classes","⭐ Review","ℹ️ Info"],
+    ql:[{i:"💪",l:"Trainers",t:"trainers"},{i:"📅",l:"Classes",t:"classes"},{i:"⭐",l:"Review",t:"review"},{i:"ℹ️",l:"Info",t:"info"}],
+  },
+  salon:{
+    name:"Glamour Hair Studio",tagline:"Premium Hair & Beauty · Belgrave Road · Leicester",
+    type:"✂️ Hair · Beauty · Bridal · Nails",emoji:"💈",sector:"salon",
+    accent:"#A78BFA",bg:"linear-gradient(160deg,#140A2A 0%,#0D0618 40%,#0A0A0F 100%)",
+    phone:"01162345680",whatsapp:"447911234569",instagram:"glamour_lcr",
+    google_review:"https://g.page/r/example3",
+    address:"78 Belgrave Road, Leicester LE4 6AT",
+    hours:["Mon–Sat  9am – 7pm","Sunday   10am – 5pm"],
+    tabs:["services","book","review","info"],
+    tab_labels:["✂️ Services","📅 Book","⭐ Review","ℹ️ Info"],
+    ql:[{i:"✂️",l:"Services",t:"services"},{i:"📅",l:"Book Now",t:"book"},{i:"⭐",l:"Review",t:"review"},{i:"ℹ️",l:"Info",t:"info"}],
+  },
+  cafe:{
+    name:"Chai & Chill Cafe",tagline:"Specialty Coffee & Asian Snacks · Leicester",
+    type:"☕ Coffee · Chai · Snacks · Chill",emoji:"☕",sector:"cafe",
+    accent:"#FB923C",bg:"linear-gradient(160deg,#1A0A00 0%,#100600 40%,#0A0A0F 100%)",
+    phone:"01162345681",whatsapp:"447911234570",instagram:"chaiandchill_lcr",
+    google_review:"https://g.page/r/example4",
+    address:"23 Narborough Road, Leicester LE3 0LB",
+    hours:["Mon–Fri  7:30am – 8pm","Sat–Sun  8am – 7pm"],
+    tabs:["loyalty","review","info"],
+    tab_labels:["🎁 Loyalty","⭐ Review","ℹ️ Info"],
+    ql:[{i:"🎁",l:"Loyalty",t:"loyalty"},{i:"☕",l:"Order",t:"loyalty"},{i:"⭐",l:"Review",t:"review"},{i:"ℹ️",l:"Info",t:"info"}],
+  },
+  driving:{
+    name:"Drive Safe with Ahmed",tagline:"DVSA Approved · Leicester · Manual & Automatic",
+    type:"🚗 Driving · Manual · Auto · Theory",emoji:"🚗",sector:"driving",
+    accent:"#38BDF8",bg:"linear-gradient(160deg,#001828 0%,#000F1A 40%,#0A0A0F 100%)",
+    phone:"07911234567",whatsapp:"447911234567",instagram:"drivesafe_ahmed",
+    google_review:"https://g.page/r/example5",
+    address:"Leicester, LE1",
+    hours:["Mon–Sat  7am – 8pm","Sunday   9am – 5pm"],
+    tabs:["profile","book","review","info"],
+    tab_labels:["👤 Profile","📅 Book","⭐ Review","ℹ️ Info"],
+    ql:[{i:"👤",l:"Profile",t:"profile"},{i:"📅",l:"Book Lesson",t:"book"},{i:"⭐",l:"Review",t:"review"},{i:"ℹ️",l:"Info",t:"info"}],
+  },
+  estate:{
+    name:"Premier Homes Leicester",tagline:"Sales · Lettings · Property Management",
+    type:"🏠 Sales · Lettings · Valuations",emoji:"🏠",sector:"estate",
+    accent:"#06B6D4",bg:"linear-gradient(160deg,#001820 0%,#000F16 40%,#0A0A0F 100%)",
+    phone:"01162345682",whatsapp:"447911234571",website:"https://premierhomes.co.uk",
+    google_review:"https://g.page/r/example6",
+    address:"15 High Street, Leicester LE1 4FP",
+    hours:["Mon–Fri  9am – 6pm","Saturday 10am – 4pm"],
+    tabs:["property","book","review","info"],
+    tab_labels:["🏠 Property","📅 Viewing","⭐ Review","ℹ️ Info"],
+    ql:[{i:"🏠",l:"Property",t:"property"},{i:"📅",l:"Viewing",t:"book"},{i:"⭐",l:"Review",t:"review"},{i:"ℹ️",l:"Info",t:"info"}],
+  },
+  wedding:{
+    name:"Raza Wedding Photography",tagline:"Asian Wedding Specialist · Leicester & Nationwide",
+    type:"📸 Photography · Video · Drone · Albums",emoji:"📸",sector:"wedding",
+    accent:"#F5A623",bg:"linear-gradient(160deg,#1A1000 0%,#100A00 40%,#0A0A0F 100%)",
+    phone:"07911234568",whatsapp:"447911234568",instagram:"razaweddings",
+    google_review:"https://g.page/r/example7",
+    address:"Leicester, LE1",
+    hours:["Available 7 days by appointment"],
+    tabs:["portfolio","packages","review","info"],
+    tab_labels:["🖼️ Portfolio","💷 Packages","⭐ Review","ℹ️ Info"],
+    ql:[{i:"🖼️",l:"Portfolio",t:"portfolio"},{i:"💷",l:"Packages",t:"packages"},{i:"⭐",l:"Review",t:"review"},{i:"💬",l:"Enquire",t:"info"}],
+  },
+  wholesale:{
+    name:"Belgrave Fabric Wholesale",tagline:"Asian Fabrics & Textiles · Leicester · UK-Wide",
+    type:"🏭 Fabrics · Textiles · Trade · Wholesale",emoji:"🏭",sector:"wholesale",
+    accent:"#06B6D4",bg:"linear-gradient(160deg,#001618 0%,#000E10 40%,#0A0A0F 100%)",
+    phone:"01162345683",whatsapp:"447911234572",website:"https://belgrfabric.co.uk",
+    google_review:"https://g.page/r/example8",
+    address:"Commercial Road, Leicester LE1 5YP",
+    hours:["Mon–Sat  9am – 5:30pm","Sunday   Closed"],
+    tabs:["catalogue","pricing","review","info"],
+    tab_labels:["📋 Catalogue","💷 Pricing","⭐ Review","ℹ️ Info"],
+    ql:[{i:"📋",l:"Catalogue",t:"catalogue"},{i:"💷",l:"Pricing",t:"pricing"},{i:"📦",l:"Order",t:"pricing"},{i:"ℹ️",l:"Info",t:"info"}],
+  }
+};
+
+let BIZ=null, CART={}, ACTIVE_ORDER=null;
+
+function loadBusiness(type){
+  BIZ=BUSINESSES[type];
+  document.getElementById('sector-picker').style.display='none';
+  document.getElementById('profile-view').style.display='block';
+  document.body.className='sec-'+type;
+  renderHero(); renderQuickActions(); renderTabBar(); switchTab(BIZ.tabs[0]);
+}
+
+function renderHero(){
+  document.getElementById('biz-avatar').textContent=BIZ.emoji;
+  document.getElementById('biz-name').textContent=BIZ.name;
+  document.getElementById('biz-tagline').textContent=BIZ.tagline;
+  document.getElementById('biz-type').textContent=BIZ.type;
+  document.getElementById('nfc-label').textContent='NFC Active · '+BIZ.name;
+  document.getElementById('hero-bg').style.background=BIZ.bg;
+}
+
+function renderQuickActions(){
+  document.getElementById('quick-actions').innerHTML=BIZ.ql.map(q=>`
+    <div class="qa-btn" onclick="switchTab('${q.t}')">
+      <span class="qa-icon">${q.i}</span>
+      <span class="qa-label">${q.l}</span>
+    </div>`).join('');
+}
+
+function renderTabBar(){
+  document.getElementById('tab-bar').innerHTML=BIZ.tabs.map((t,i)=>`
+    <button class="tab-btn${i===0?' active':''}" id="tabb-${t}" onclick="switchTab('${t}',this)">
+      ${BIZ.tab_labels[i]}
+    </button>`).join('');
+}
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  (el||document.getElementById('tabb-'+id))?.classList.add('active');
+  renderTabContent(id);
+}
+
+function renderTabContent(id){
+  const body=document.getElementById('tab-body');
+  const wrap=document.createElement('div');
+  wrap.className='tab-content active';
+  if(id==='menu'&&BIZ.menu){wrap.appendChild(buildMenu());body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='my-order'){wrap.innerHTML=buildOrderStatus();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='bill'){wrap.innerHTML=buildBill();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='review'){wrap.innerHTML=buildReview();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='info'){wrap.innerHTML=buildInfo();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='trainers'){wrap.innerHTML=buildTrainers();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='classes'){wrap.innerHTML=buildClasses();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='services'){wrap.innerHTML=buildServices();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='book'){wrap.innerHTML=buildBooking();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='loyalty'){wrap.innerHTML=buildLoyalty();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='profile'){wrap.innerHTML=buildDrivingProfile();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='property'){wrap.innerHTML=buildProperty();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='portfolio'){wrap.innerHTML=buildPortfolio();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='packages'){wrap.innerHTML=buildPackages();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='catalogue'){wrap.innerHTML=buildCatalogue();body.innerHTML='';body.appendChild(wrap);return}
+  if(id==='pricing'){wrap.innerHTML=buildWholesalePricing();body.innerHTML='';body.appendChild(wrap);return}
+  wrap.innerHTML='<div style="padding:30px;text-align:center;color:var(--tx2)">Coming soon</div>';
+  body.innerHTML='';body.appendChild(wrap);
+}
+
+// ── MENU ─────────────────────────────────────────────────
+function buildMenu(){
+  const div=document.createElement('div');
+  div.innerHTML=`<div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="menu-search" placeholder="Search menu..." oninput="filterMenu(this.value)">
+  </div><div id="menu-items-body"></div>`;
+  setTimeout(()=>renderMenuItems(''),10);
+  return div;
+}
+function renderMenuItems(filter){
+  const body=document.getElementById('menu-items-body');
+  if(!body)return;
+  body.innerHTML='';
+  BIZ.menu.forEach(cat=>{
+    const items=cat.items.filter(i=>!filter||i.n.toLowerCase().includes(filter.toLowerCase())||i.d.toLowerCase().includes(filter.toLowerCase()));
+    if(!items.length)return;
+    const sec=document.createElement('div');sec.style.marginBottom='20px';
+    sec.innerHTML=`<div class="category-label">${cat.cat}</div>`;
+    items.forEach(item=>{
+      const qty=CART[item.id]?.qty||0;
+      const tagMap={veg:'<span class="tag t-veg">🟢 Veg</span>',hot:'<span class="tag t-hot">🌶️ Spicy</span>',pop:'<span class="tag t-pop">⭐ Popular</span>',gf:'<span class="tag t-gf">🌾 GF</span>'};
+      const tags=item.tags.map(t=>tagMap[t]||'').join('');
+      const el=document.createElement('div');
+      el.className='menu-card'+(qty>0?' selected':'');
+      el.id='mc-'+item.id;
+      el.innerHTML=`
+        <div class="menu-emoji">${item.e}</div>
+        <div class="menu-info">
+          <div class="menu-name">${item.n}</div>
+          <div class="menu-desc">${item.d}</div>
+          <div class="menu-tags">${tags}</div>
+          <div class="menu-row">
+            <div class="menu-price">£${item.p.toFixed(2)}</div>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="chgQty(${item.id},-1,event)">−</button>
+              <span class="qty-num" id="qn-${item.id}">${qty}</span>
+              <button class="qty-btn" onclick="chgQty(${item.id},1,event)">+</button>
+            </div>
+          </div>
+        </div>`;
+      sec.appendChild(el);
+    });
+    body.appendChild(sec);
+  });
+}
+function filterMenu(v){renderMenuItems(v)}
+function chgQty(id,delta,e){
+  e.stopPropagation();
+  const item=BIZ.menu.flatMap(c=>c.items).find(i=>i.id===id);
+  if(!item)return;
+  if(!CART[id])CART[id]={item,qty:0};
+  CART[id].qty=Math.max(0,CART[id].qty+delta);
+  if(CART[id].qty===0)delete CART[id];
+  const qn=document.getElementById('qn-'+id);if(qn)qn.textContent=CART[id]?.qty||0;
+  document.getElementById('mc-'+id)?.classList.toggle('selected',!!(CART[id]?.qty));
+  updateCartBar();
+}
+function updateCartBar(){
+  const total=Object.values(CART).reduce((s,c)=>s+c.item.p*c.qty,0);
+  const count=Object.values(CART).reduce((s,c)=>s+c.qty,0);
+  document.getElementById('cart-count-text').textContent=count+(count===1?' item':' items')+' selected';
+  document.getElementById('cart-total-text').textContent='£'+total.toFixed(2)+' →';
+  document.getElementById('cart-bar').className='cart-bar'+(count>0?' visible':'');
+}
+
+// ── ORDER MODAL ───────────────────────────────────────────
+function openOrderModal(){
+  const total=Object.values(CART).reduce((s,c)=>s+c.item.p*c.qty,0);
+  document.getElementById('modal-items').innerHTML=Object.values(CART).map(c=>`
+    <div class="order-item-row">
+      <div class="oi-em">${c.item.e}</div>
+      <div><div class="oi-name">${c.item.n}</div><div class="oi-qty">× ${c.qty}</div></div>
+      <div class="oi-price">£${(c.item.p*c.qty).toFixed(2)}</div>
+    </div>`).join('');
+  document.getElementById('modal-total').textContent='£'+total.toFixed(2);
+  document.getElementById('order-modal').classList.add('open');
+}
+function closeOrderModal(){document.getElementById('order-modal').classList.remove('open')}
+function placeOrder(){
+  const table=document.getElementById('table-input').value||'Unknown';
+  const notes=document.getElementById('order-notes').value;
+  const items=Object.values(CART);
+  if(!items.length)return;
+  ACTIVE_ORDER={id:'ORD-'+Math.floor(10000+Math.random()*90000),table,notes,items:[...items],status:'placed',placedAt:new Date()};
+  closeOrderModal();CART={};renderMenuItems('');updateCartBar();
+  switchTab('my-order');
+  updateOrderStatus('placed');
+  toast('✅ Order placed! Kitchen has been notified.');
+  setTimeout(()=>{updateOrderStatus('accepted');toast('✅ Order accepted — being prepared!');},4000);
+  setTimeout(()=>{updateOrderStatus('preparing');toast('🍳 Your food is being cooked!');},9000);
+}
+function updateOrderStatus(status){
+  ACTIVE_ORDER&&(ACTIVE_ORDER.status=status);
+  const cur=document.getElementById('tab-body');
+  if(cur&&document.getElementById('tabb-my-order')?.classList.contains('active'))renderTabContent('my-order');
+}
+
+// ── ORDER STATUS ──────────────────────────────────────────
+function buildOrderStatus(){
+  if(!ACTIVE_ORDER)return`<div class="status-card">
+    <div class="status-title">No Active Order</div>
+    <div class="status-sub">Go to the Menu tab, add items and place your order</div>
+    <div class="status-track">
+      ${['📝','✅','🍳','🔔'].map((e,i)=>`
+        <div class="status-step"><div class="step-dot pend">${e}</div><div class="step-label">${['Placed','Accepted','Preparing','Ready!'][i]}</div></div>
+        ${i<3?'<div class="step-line"></div>':''}`).join('')}
+    </div>
+  </div>`;
+  const steps=['placed','accepted','preparing','ready'];
+  const idx=steps.indexOf(ACTIVE_ORDER.status);
+  const msgs={placed:'Order Placed — Waiting for kitchen',accepted:'Accepted ✅ — Being prepared now',preparing:'Preparing 🍳 — Won\'t be long!',ready:'Ready! 🔔 — Please collect your order'};
+  const stepsHtml=['📝','✅','🍳','🔔'].map((e,i)=>`
+    <div class="status-step">
+      <div class="step-dot ${i<idx?'done':i===idx?'active':'pend'}">${e}</div>
+      <div class="step-label">${['Placed','Accepted','Preparing','Ready!'][i]}</div>
+    </div>${i<3?`<div class="step-line${i<idx?' done':''}"></div>`:''}`).join('');
+  const total=ACTIVE_ORDER.items.reduce((s,c)=>s+c.item.p*c.qty,0);
+  const itemList=ACTIVE_ORDER.items.map(c=>`• ${c.qty}× ${c.item.n} — £${(c.item.p*c.qty).toFixed(2)}`).join('<br>');
+  return`<div class="status-card">
+    <div class="status-title">${msgs[ACTIVE_ORDER.status]}</div>
+    <div class="status-sub">Order ${ACTIVE_ORDER.id} · ${ACTIVE_ORDER.table}</div>
+    <div class="status-track">${stepsHtml}</div>
+    <div class="status-items">${itemList}<br><strong>Total: £${total.toFixed(2)}</strong></div>
+  </div>`;
+}
+
+// ── BILL ──────────────────────────────────────────────────
+function buildBill(){
+  return`<div class="bill-card">
+    <div class="bill-head"><div class="bill-title">🧾 Your Current Bill</div><div class="bill-sub">Table 4 · Updated live by restaurant</div></div>
+    <div class="bill-rows">
+      <div class="bill-row"><div><div class="bill-item-name">Chicken Tikka Masala</div><div class="bill-item-qty">× 1</div></div><div class="bill-price">£13.99</div></div>
+      <div class="bill-row"><div><div class="bill-item-name">Garlic Naan</div><div class="bill-item-qty">× 2</div></div><div class="bill-price">£5.98</div></div>
+      <div class="bill-row"><div><div class="bill-item-name">Mango Lassi</div><div class="bill-item-qty">× 1</div></div><div class="bill-price">£3.99</div></div>
+      <div class="bill-row"><div><div class="bill-item-name">Poppadoms & Chutney</div><div class="bill-item-qty">× 1</div></div><div class="bill-price">£2.50</div></div>
+    </div>
+    <div class="bill-totals">
+      <div class="bill-cell"><div class="bill-cell-label">Subtotal</div><div class="bill-cell-val">£26.46</div></div>
+      <div class="bill-cell"><div class="bill-cell-label">Service (12%)</div><div class="bill-cell-val">£3.18</div></div>
+      <div class="bill-cell"><div class="bill-cell-label">Total</div><div class="bill-cell-val highlight">£29.64</div></div>
+      <div class="bill-cell"><div class="bill-cell-label">Table</div><div class="bill-cell-val">4</div></div>
+    </div>
+  </div>
+  <button class="pay-now-btn" onclick="toast('💳 Redirecting to secure payment...')">💳 Pay Now — £29.64</button>
+  <div class="pay-methods">
+    <div class="pay-m" onclick="toast('Apple Pay selected')"><div class="pay-m-icon">🍎</div>Apple Pay</div>
+    <div class="pay-m" onclick="toast('Google Pay selected')"><div class="pay-m-icon">🔵</div>Google Pay</div>
+    <div class="pay-m" onclick="toast('PayPal selected')"><div class="pay-m-icon">💙</div>PayPal</div>
+    <div class="pay-m" onclick="toast('Card payment')"><div class="pay-m-icon">💳</div>Card</div>
+  </div>`;
+}
+
+// ── REVIEW ────────────────────────────────────────────────
+function buildReview(){
+  return`<div class="review-hero">
+    <div class="stars">⭐⭐⭐⭐⭐</div>
+    <div class="review-title">Enjoying Your Visit?</div>
+    <div class="review-body">Leave a review in 30 seconds — it makes a huge difference to our team.</div>
+    <button class="google-btn" onclick="window.open('${BIZ.google_review}','_blank')">⭐ Leave a Google Review</button>
+    <button class="share-btn" onclick="shareProfile()">📤 Share ${BIZ.name}</button>
+  </div>
+  <div class="reviews-list">
+    <div class="review-card"><div class="rc-top"><span class="rc-name">Sarah M.</span><span class="rc-stars">⭐⭐⭐⭐⭐</span></div><div class="rc-text">Absolutely incredible! The Butter Chicken is the best in Leicester. The ordering system is so easy too.</div></div>
+    <div class="review-card"><div class="rc-top"><span class="rc-name">Ahmed R.</span><span class="rc-stars">⭐⭐⭐⭐⭐</span></div><div class="rc-text">Authentic flavours and generous portions. Loved being able to order from my phone!</div></div>
+    <div class="review-card"><div class="rc-top"><span class="rc-name">Priya K.</span><span class="rc-stars">⭐⭐⭐⭐⭐</span></div><div class="rc-text">Best place on Belgrave Road — and the bill/payment from phone is brilliant.</div></div>
+  </div>
+  <div class="powered">Powered by <a href="https://tapconnect.co.uk">TapConnect</a> · Smart NFC for UK Businesses</div>`;
+}
+
+// ── INFO ──────────────────────────────────────────────────
+function buildInfo(){
+  const hoursHtml=BIZ.hours.map(h=>`<div>${h}</div>`).join('');
+  return`<div class="info-grid">
+    <div class="info-cell"><div class="ic-label">Hours</div><div class="ic-val">${hoursHtml}</div></div>
+    <div class="info-cell"><div class="ic-label">Address</div><div class="ic-val"><a href="https://maps.google.com/?q=${encodeURIComponent(BIZ.address||'')}">📍 ${BIZ.address}</a></div></div>
+    ${BIZ.phone?`<div class="info-cell"><div class="ic-label">Phone</div><div class="ic-val"><a href="tel:${BIZ.phone}">${BIZ.phone}</a></div></div>`:''}
+    <div class="info-cell"><div class="ic-label">WhatsApp</div><div class="ic-val"><a href="https://wa.me/${BIZ.whatsapp}">Send Message</a></div></div>
+  </div>
+  <div class="social-row">
+    ${BIZ.whatsapp?`<a class="social-btn" href="https://wa.me/${BIZ.whatsapp}" onclick="toast('Opening WhatsApp...')">💬 WhatsApp</a>`:''}
+    ${BIZ.instagram?`<a class="social-btn" href="https://instagram.com/${BIZ.instagram}" target="_blank">📸 Instagram</a>`:''}
+    ${BIZ.website?`<a class="social-btn" href="${BIZ.website}" target="_blank">🌐 Website</a>`:''}
+    <div class="social-btn" onclick="saveContact()">👤 Save Contact</div>
+  </div>
+  <div class="powered" style="margin-top:14px">Powered by <a href="https://tapconnect.co.uk">TapConnect</a> · tapconnect.co.uk</div>`;
+}
+
+// ── GYM ──────────────────────────────────────────────────
+function buildTrainers(){
+  return`<div>
+    <div class="section-head">Personal Trainers</div>
+    ${[
+      {e:'💪',n:'Mohammed Hassan',s:'Strength & Conditioning · 5 years',bg:'linear-gradient(135deg,#22C55E,#16A34A)'},
+      {e:'🧘',n:'Priya Patel',s:'Yoga & HIIT · Weight Loss Specialist',bg:'linear-gradient(135deg,#38BDF8,#0891B2)'},
+      {e:'🥊',n:'Arjun Singh',s:'Boxing & MMA · Beginner Friendly',bg:'linear-gradient(135deg,#F5A623,#EA580C)'},
+    ].map(t=>`<div class="trainer-card">
+      <div class="trainer-avatar" style="background:${t.bg}">${t.e}</div>
+      <div>
+        <div class="trainer-name">${t.n}</div>
+        <div class="trainer-spec">${t.s}</div>
+        <div class="trainer-btns">
+          <button class="t-btn-p" onclick="switchTab('book')">📅 Book Session</button>
+          <button class="t-btn-s" onclick="toast('WhatsApp opening...')">💬 Message</button>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+function buildClasses(){
+  return`<div>
+    <div class="section-head">Today's Classes</div>
+    ${[
+      {t:'6:00 AM',n:'Morning HIIT',s:'12 spots left',f:false},
+      {t:'9:30 AM',n:'Yoga Flow',s:'8 spots left',f:false},
+      {t:'12:00 PM',n:'Strength Circuit',s:'3 spots left',f:false},
+      {t:'6:00 PM',n:'Boxing Cardio',s:'FULL',f:true},
+      {t:'7:30 PM',n:'Pilates',s:'15 spots left',f:false},
+    ].map(c=>`<div class="class-row">
+      <div class="class-time">${c.t}</div>
+      <div><div class="class-name">${c.n}</div><div class="class-spots">${c.s}</div></div>
+      <button class="class-book-btn" style="${c.f?'background:var(--tx2);color:var(--ink)':''}" onclick="toast('${c.f?'Added to waitlist!':'✅ Class booked!'}')">${c.f?'Waitlist':'Book'}</button>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── SALON ─────────────────────────────────────────────────
+function buildServices(){
+  const services=[
+    {n:"Women's Cut & Blow Dry",d:"60 mins",p:"£35",cat:"Hair"},
+    {n:"Colour & Highlights",d:"90-120 mins",p:"£65+",cat:"Hair"},
+    {n:"Men's Cut & Beard Trim",d:"30 mins",p:"£18",cat:"Hair"},
+    {n:"Eyebrow Threading",d:"15 mins",p:"£6",cat:"Beauty"},
+    {n:"Gel Nails",d:"60 mins",p:"£30",cat:"Nails"},
+    {n:"Full Bridal Package",d:"Hair + Makeup + Trial",p:"£220",cat:"Bridal"},
+  ];
+  const cats=[...new Set(services.map(s=>s.cat))];
+  return cats.map(cat=>`
+    <div class="section-head">${cat}</div>
+    ${services.filter(s=>s.cat===cat).map(s=>`
+      <div class="service-row">
+        <div><div class="srv-name">${s.n}</div><div class="srv-dur">⏱ ${s.d}</div></div>
+        <div class="srv-price">${s.p}</div>
+        <button class="srv-book" onclick="switchTab('book')">Book</button>
+      </div>`).join('')}`).join('');
+}
+
+// ── BOOKING ───────────────────────────────────────────────
+function buildBooking(){
+  return`<div class="panel">
+    <div class="panel-title">📅 Request an Appointment</div>
+    <label class="form-label">Your Full Name</label>
+    <input class="form-input" placeholder="e.g. Sarah Ahmed">
+    <label class="form-label">Phone Number</label>
+    <input class="form-input" type="tel" placeholder="+44 7xxx xxxxxx">
+    <label class="form-label">Preferred Date</label>
+    <input class="form-input" type="date">
+    <label class="form-label">Preferred Time</label>
+    <input class="form-input" type="time">
+    <label class="form-label">Notes (optional)</label>
+    <textarea class="form-input form-ta" placeholder="Any special requirements..."></textarea>
+    <button class="cta-btn" onclick="toast('📅 Booking request sent! We will confirm shortly.')">📅 Send Booking Request</button>
+    <button class="cta-wa" onclick="toast('Opening WhatsApp...')">💬 WhatsApp to Book Instead</button>
+  </div>`;
+}
+
+// ── CAFE LOYALTY ──────────────────────────────────────────
+function buildLoyalty(){
+  const stamps=5,max=9;
+  const stampsHtml=Array.from({length:max},(_,i)=>
+    i<stamps?'<div class="stamp earned">☕</div>':
+    i===max-1?'<div class="stamp reward">🎁</div>':
+    '<div class="stamp empty"></div>').join('');
+  return`<div class="loyalty-card">
+    <div class="loyalty-title">🎁 Your Loyalty Card</div>
+    <div class="loyalty-sub">Every visit earns a stamp. Collect ${max} for a FREE coffee!</div>
+    <div class="stamps">${stampsHtml}</div>
+    <div class="loyalty-progress">✅ ${stamps} of ${max} stamps · ${max-stamps} more for your free coffee!</div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">☕ Today's Highlights</div>
+    ${[
+      {e:'☕',n:'Signature Masala Chai',d:'Our famous blend',p:'£3.50'},
+      {e:'🥐',n:'Almond Croissant',d:'Fresh baked daily',p:'£3.20'},
+      {e:'🧋',n:'Mango Bubble Tea',d:'Sweet & refreshing',p:'£4.50'},
+    ].map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--ink3);border-radius:10px;margin-bottom:8px">
+      <div style="font-size:22px">${i.e}</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:700">${i.n}</div><div style="font-size:10px;color:var(--tx2)">${i.d}</div></div>
+      <div style="font-size:14px;font-weight:800;color:var(--sec-text)">${i.p}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── DRIVING ───────────────────────────────────────────────
+function buildDrivingProfile(){
+  return`<div class="stat-row">
+    <div class="stat-box"><div class="stat-val">94%</div><div class="stat-lbl">First-time pass rate</div></div>
+    <div class="stat-box"><div class="stat-val">4.9⭐</div><div class="stat-lbl">87 Google reviews</div></div>
+    <div class="stat-box"><div class="stat-val">£32/hr</div><div class="stat-lbl">Manual lessons</div></div>
+    <div class="stat-box"><div class="stat-val">£35/hr</div><div class="stat-lbl">Automatic lessons</div></div>
+  </div>
+  <button class="cta-btn" onclick="switchTab('book')">📅 Book a Lesson</button>
+  <button class="cta-wa" onclick="toast('Opening WhatsApp...')">💬 Ask a Question First</button>`;
+}
+
+// ── ESTATE ────────────────────────────────────────────────
+function buildProperty(){
+  return`<div class="panel">
+    <div style="font-size:13px;font-weight:700;color:var(--sec-text);margin-bottom:8px">📍 Featured Property</div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:3px;font-family:'DM Serif Display',serif">3 Bed Semi · Belgrave Road</div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:10px">Leicester LE4 · £225,000</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      ${['3 Beds','2 Baths','Garden','Parking','EPC: C'].map(f=>`
+        <span style="background:var(--sec2);color:var(--sec-text);border:1px solid var(--sec);border-radius:100px;padding:2px 9px;font-size:9px;font-weight:700">${f}</span>`).join('')}
+    </div>
+    <button class="cta-btn" onclick="switchTab('book')">📅 Book a Viewing</button>
+    <button class="cta-wa" onclick="toast('Opening WhatsApp...')">💬 WhatsApp Agent</button>
+  </div>
+  <div class="panel">
+    <div class="panel-title">🏠 More Properties</div>
+    ${[
+      {n:'2 Bed Flat · City Centre',p:'£145,000',t:'For Sale'},
+      {n:'3 Bed Terrace · Evington',p:'£1,100/mo',t:'To Let'},
+      {n:'4 Bed Semi · Oadby',p:'£375,000',t:'For Sale'},
+    ].map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--ink3);border-radius:10px;margin-bottom:7px;cursor:pointer" onclick="toast('Property details...')">
+      <span style="font-size:20px">🏠</span>
+      <div style="flex:1"><div style="font-size:12px;font-weight:700">${p.n}</div><div style="font-size:10px;color:var(--tx2)">${p.t}</div></div>
+      <div style="font-size:13px;font-weight:800;color:var(--sec-text)">${p.p}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── WEDDING ───────────────────────────────────────────────
+function buildPortfolio(){
+  return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px">
+    ${['🎊 Asian Weddings','🎥 Videography','🚁 Drone Footage','📸 Portraits','💍 Engagements','📔 Premium Albums'].map(s=>`
+      <div class="panel" style="text-align:center;cursor:pointer;padding:16px" onclick="toast('Gallery coming...')">
+        <div style="font-size:11px;font-weight:700">${s}</div>
+      </div>`).join('')}
+  </div>
+  <div style="text-align:center;padding:16px;background:var(--ink2);border:1px solid var(--border);border-radius:14px;margin-bottom:10px">
+    <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--sec-text)">200+</div>
+    <div style="font-size:11px;color:var(--tx2)">Weddings photographed across the UK</div>
+  </div>
+  <button class="cta-btn" onclick="toast('Opening Instagram...')">📸 View Full Gallery</button>`;
+}
+function buildPackages(){
+  return[
+    {n:'Silver',p:'£899',f:['Full day coverage','400+ edited photos','Online gallery']},
+    {n:'Gold',p:'£1,499',f:['600+ edited photos','Highlight video 5 min','2 photographers','Premium album']},
+    {n:'Platinum',p:'£2,499',f:['2-day coverage','1000+ photos','Full feature film','Drone footage','Same-day edit']},
+  ].map(pkg=>`<div class="panel" style="margin-bottom:10px">
+    <div style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:2px">${pkg.n} Package</div>
+    <div style="font-size:24px;font-weight:800;color:var(--sec-text);font-family:'DM Serif Display',serif;margin-bottom:10px">${pkg.p}</div>
+    ${pkg.f.map(f=>`<div style="font-size:11px;color:var(--tx2);padding:3px 0">✓ ${f}</div>`).join('')}
+    <button class="cta-btn" style="margin-top:10px" onclick="toast('Enquiry sent for ${pkg.n} package!')">Enquire</button>
+  </div>`).join('');
+}
+
+// ── WHOLESALE ─────────────────────────────────────────────
+function buildCatalogue(){
+  return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+    ${[
+      {e:'🎨',n:'Embroidered Fabrics',d:'200+ designs'},
+      {e:'✨',n:'Silk & Chiffon',d:'Premium quality'},
+      {e:'🧵',n:'Cotton Prints',d:'Seasonal prints'},
+      {e:'💎',n:'Bridal Fabrics',d:'Exclusive range'},
+      {e:'🌟',n:'Sequin & Beaded',d:'Party wear'},
+      {e:'📦',n:'Bulk Orders',d:'Min. 50 metres'},
+    ].map(c=>`<div class="panel" style="text-align:center;cursor:pointer" onclick="toast('${c.n} catalogue loading...')">
+      <div style="font-size:26px;margin-bottom:6px">${c.e}</div>
+      <div style="font-size:11px;font-weight:700">${c.n}</div>
+      <div style="font-size:9px;color:var(--tx2)">${c.d}</div>
+    </div>`).join('')}
+  </div>`;
+}
+function buildWholesalePricing(){
+  return`<div class="panel">
+    <div class="panel-title">💷 Trade Pricing</div>
+    ${[['1–50 metres','£8–15/m'],['51–200 metres','£6–12/m'],['200+ metres','£4–9/m'],['Full roll 500m+','POA']].map(r=>`
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px">
+        <span style="color:var(--tx2)">${r[0]}</span>
+        <span style="font-weight:700;color:var(--sec-text)">${r[1]}</span>
+      </div>`).join('')}
+  </div>
+  <button class="cta-btn" onclick="toast('Opening bulk order form...')">📦 Place Bulk Order</button>
+  <button class="cta-wa" onclick="toast('Opening WhatsApp...')">💬 WhatsApp for Trade Quote</button>`;
+}
+
+// ── UTILS ─────────────────────────────────────────────────
+function shareProfile(){
+  if(navigator.share)navigator.share({title:BIZ.name,text:BIZ.tagline,url:window.location.href});
+  else{navigator.clipboard?.writeText(window.location.href);toast('Profile link copied!')}
+}
+function saveContact(){
+  const v=`BEGIN:VCARD\nVERSION:3.0\nFN:${BIZ.name}\nTEL:${BIZ.phone||''}\nURL:${window.location.href}\nEND:VCARD`;
+  const b=new Blob([v],{type:'text/vcard'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=BIZ.name.replace(/\s/g,'_')+'.vcf';a.click();
+  toast('Contact saved to phone!');
+}
+function toast(msg){
+  const t=document.getElementById('toast-el');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Auto-load restaurant on page start
+loadBusiness('restaurant');
+</script>
+</body>
+</html>

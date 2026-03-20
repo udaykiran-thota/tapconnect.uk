@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TapConnect — Owner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0A0F;--ink2:#12121A;--ink3:#1A1A28;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --a1:#F5A623;--a2:#FFCD6B;--a3:rgba(245,166,35,0.12);
+  --tx:#F5F0E8;--tx2:#9A9080;--tx3:#4A4035;
+  --gn:#22C55E;--rd:#F43F5E;--bl:#38BDF8;--pu:#A78BFA;
+  --sb:220px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--tx);min-height:100vh;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{height:54px;background:var(--ink2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--a1),#FF8C00);display:flex;align-items:center;justify-content:center;font-size:14px}
+.brand-text{font-family:'DM Serif Display',serif;font-size:18px}
+.brand-text span{color:var(--a1)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.notif{position:relative;width:34px;height:34px;background:var(--ink3);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--rd);border-radius:50%;border:2px solid var(--ink2)}
+.preview-btn{background:linear-gradient(135deg,var(--a1),#FF8C00);color:#000;border:none;padding:7px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* LAYOUT */
+.layout{display:flex;flex:1}
+
+/* SIDEBAR */
+.sidebar{width:var(--sb);background:var(--ink2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:54px;left:0;bottom:0;overflow-y:auto;z-index:50}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2)}
+
+.owner-info{margin:12px;background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(245,166,35,0.04));border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:12px}
+.oi-row{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.oi-avatar{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--a1),#FF8C00);display:flex;align-items:center;justify-content:center;font-size:17px}
+.oi-name{font-size:13px;font-weight:700}
+.oi-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);border-radius:100px;padding:1px 7px;font-size:8px;font-weight:700;color:var(--gn)}
+.oi-plan{font-size:10px;color:var(--tx2);margin-top:3px}
+
+.nav-sec{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);padding:12px 14px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 11px;margin:0 7px 1px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:500;color:var(--tx2);transition:all 0.15s;position:relative}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--tx)}
+.nav-item.on{background:rgba(245,166,35,0.1);color:var(--a1);border:1px solid rgba(245,166,35,0.18)}
+.nav-icon{font-size:14px;width:18px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--rd);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:100px;animation:pulse 2s infinite}
+.nav-earn{margin-left:auto;background:rgba(34,197,94,0.12);color:var(--gn);font-size:8px;font-weight:700;padding:1px 5px;border-radius:100px}
+.sidebar-foot{padding:11px 13px;border-top:1px solid var(--border);margin-top:auto}
+.sf-link{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--tx2);cursor:pointer;padding:5px 0}
+.sf-link:hover{color:var(--tx)}
+
+/* MAIN */
+.main{margin-left:var(--sb);flex:1;padding:20px}
+.page{display:none}.page.on{display:block}
+
+/* WELCOME */
+.welcome-bar{background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(245,166,35,0.03));border:1px solid rgba(245,166,35,0.18);border-radius:14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.wb-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:3px}
+.wb-sub{font-size:12px;color:var(--tx2)}
+.wb-btns{display:flex;gap:8px}
+.btn-p{background:linear-gradient(135deg,var(--a1),#FF8C00);color:#000;border:none;padding:9px 18px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-g{background:rgba(255,255,255,0.06);color:var(--tx);border:1px solid var(--border);padding:9px 18px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* VERIFIED */
+.verified-strip{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.18);border-radius:10px;padding:9px 14px;display:flex;gap:8px;font-size:12px;color:var(--gn);align-items:center;margin-bottom:16px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:18px}
+.kpi-card{background:var(--ink2);border:1px solid var(--border);border-radius:14px;padding:15px;transition:border-color 0.2s}
+.kpi-card:hover{border-color:var(--border2)}
+.kpi-label{font-size:9px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:30px;margin-bottom:3px}
+.kpi-change{font-size:10px;color:var(--tx2)}
+.c-a{color:var(--a1)}.c-g{color:var(--gn)}.c-b{color:var(--bl)}.c-p{color:var(--pu)}
+.up{color:var(--gn)}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+/* PANEL */
+.panel{background:var(--ink2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px}
+.panel-title{font-size:15px;font-weight:700;margin-bottom:3px;letter-spacing:-0.2px}
+.panel-sub{font-size:11px;color:var(--tx2);margin-bottom:14px}
+
+/* ACTIVITY */
+.act-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.025);border-radius:8px;margin-bottom:6px}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.act-text{font-size:11px;flex:1}.act-time{font-size:9px;color:var(--tx2)}
+
+/* CHART BARS */
+.chart-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.chart-lbl{font-size:10px;color:var(--tx2);width:64px;text-align:right;flex-shrink:0}
+.chart-track{flex:1;background:rgba(255,255,255,0.04);border-radius:3px;height:7px;overflow:hidden}
+.chart-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
+.chart-val{font-size:10px;font-weight:600;width:36px}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qa{padding:12px 8px;border-radius:10px;cursor:pointer;font-size:11px;font-weight:600;border:1px solid;text-align:center;transition:all 0.15s}
+.qa:active{transform:scale(0.95)}
+
+/* ORDERS */
+.order-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
+.order-card{background:var(--ink2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.oc-top{padding:11px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.oc-table{font-family:'DM Serif Display',serif;font-size:20px}
+.oc-time{font-size:10px;color:var(--tx2)}
+.oc-status{padding:3px 9px;border-radius:100px;font-size:9px;font-weight:700}
+.st-new{background:rgba(244,63,94,0.12);color:var(--rd);border:1px solid rgba(244,63,94,0.2)}
+.st-prep{background:rgba(245,166,35,0.12);color:var(--a1);border:1px solid rgba(245,166,35,0.2)}
+.st-ready{background:rgba(34,197,94,0.12);color:var(--gn);border:1px solid rgba(34,197,94,0.2)}
+.st-done{background:rgba(154,144,128,0.1);color:var(--tx2);border:1px solid rgba(154,144,128,0.15)}
+.oc-items{padding:10px 13px;border-bottom:1px solid var(--border)}
+.oc-item-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:var(--tx2)}
+.oc-item-row span:first-child{color:var(--tx)}
+.oc-notes{padding:6px 13px;font-size:10px;color:var(--a2);background:rgba(245,166,35,0.04);border-bottom:1px solid var(--border)}
+.oc-foot{padding:10px 13px;display:flex;gap:7px;align-items:center}
+.oc-total{font-family:'DM Serif Display',serif;font-size:18px;color:var(--gn);flex:1}
+.oc-btn{padding:6px 11px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.btn-accept{background:var(--gn);color:#000}
+.btn-ready{background:var(--a1);color:#000}
+.btn-done{background:var(--ink3);color:var(--tx)}
+.btn-reject{background:rgba(244,63,94,0.1);color:var(--rd);border:1px solid rgba(244,63,94,0.2)!important}
+.privacy-note{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.16);border-radius:10px;padding:10px 13px;font-size:11px;color:var(--bl);display:flex;gap:8px;margin-bottom:14px;line-height:1.5}
+
+/* MENU MANAGER */
+.menu-filters{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.mf-btn{padding:6px 13px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--tx2);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.mf-btn.on{background:rgba(245,166,35,0.1);border-color:rgba(245,166,35,0.28);color:var(--a1)}
+.menu-manage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}
+.mm-item{background:var(--ink3);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;gap:8px}
+.mm-dot{width:7px;height:7px;border-radius:50%;background:var(--gn);flex-shrink:0;margin-top:4px}
+.mm-dot.off{background:var(--rd)}
+.mm-emoji{font-size:20px;flex-shrink:0}
+.mm-name{font-size:12px;font-weight:600;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mm-price{font-size:11px;color:var(--gn);font-weight:700;margin-bottom:6px}
+.mm-actions{display:flex;gap:4px}
+.mm-btn{padding:3px 8px;border-radius:6px;font-size:9px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.mm-edit{background:rgba(56,189,248,0.1);color:var(--bl);border:1px solid rgba(56,189,248,0.2)!important}
+.mm-toggle{background:rgba(34,197,94,0.1);color:var(--gn);border:1px solid rgba(34,197,94,0.2)!important}
+
+/* FORMS */
+.form-group{margin-bottom:13px}
+.form-label{display:block;font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:rgba(245,166,35,0.35)}
+.form-input::placeholder{color:var(--tx2)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.save-btn{background:linear-gradient(135deg,var(--a1),#FF8C00);color:#000;border:none;padding:11px 22px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* PROFILE PREVIEW */
+.profile-preview{background:linear-gradient(135deg,var(--ink3),var(--ink2));border-radius:13px;padding:18px;text-align:center;margin-bottom:14px}
+.pp-avatar{width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,var(--a1),#FF8C00);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px;border:2px solid rgba(255,255,255,0.1)}
+.pp-name{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:3px}
+.pp-vb{display:inline-flex;align-items:center;gap:3px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);border-radius:100px;padding:2px 8px;font-size:9px;font-weight:700;color:var(--gn);margin-bottom:12px}
+.pp-links{display:flex;flex-direction:column;gap:5px}
+.pp-link{background:rgba(255,255,255,0.06);border-radius:8px;padding:7px 11px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:7px}
+
+/* NFC URL */
+.nfc-url-box{background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.14);border-radius:10px;padding:12px 13px;margin-bottom:13px}
+.nfc-url-label{font-size:9px;font-weight:700;color:var(--bl);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.nfc-url-val{font-size:11px;word-break:break-all;margin-bottom:8px;color:var(--tx)}
+.copy-btn{background:rgba(56,189,248,0.1);color:var(--bl);border:1px solid rgba(56,189,248,0.2);padding:5px 13px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* REFER */
+.refer-hero{background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(245,166,35,0.03));border:1px solid rgba(245,166,35,0.2);border-radius:15px;padding:22px;margin-bottom:16px}
+.refer-title{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:5px}
+.refer-title span{color:var(--a1)}
+.refer-sub{font-size:12px;color:var(--tx2);margin-bottom:16px;line-height:1.6}
+.code-box{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(245,166,35,0.22);border-radius:10px;padding:11px 14px;margin-bottom:14px}
+.code-val{font-family:monospace;font-size:17px;font-weight:700;color:var(--a2);flex:1;letter-spacing:2px}
+.copy-code{background:rgba(245,166,35,0.12);color:var(--a1);border:1px solid rgba(245,166,35,0.28);padding:6px 13px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.progress-circles{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:14px 0}
+.p-step{text-align:center}
+.p-circle{width:42px;height:42px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin:0 auto 4px}
+.p-done{border-color:var(--gn);background:rgba(34,197,94,0.12);color:var(--gn)}
+.p-active{border-color:var(--a1);background:rgba(245,166,35,0.12);color:var(--a1);animation:pulse 2s infinite}
+.p-pend{border-color:var(--border);color:var(--tx3)}
+.p-label{font-size:9px;color:var(--tx2)}
+.earn-display{display:flex;align-items:center;justify-content:space-between;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.18);border-radius:10px;padding:13px 15px}
+.earn-label{font-size:12px;color:var(--tx2)}
+.earn-val{font-family:'DM Serif Display',serif;font-size:28px;color:var(--gn)}
+
+/* PLANS */
+.current-plan-bar{background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.2);border-radius:13px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.cp-lbl{font-size:9px;color:var(--tx2);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.cp-name{font-family:'DM Serif Display',serif;font-size:20px}
+.cp-info{font-size:11px;color:var(--tx2);margin-top:2px}
+.cp-price{font-family:'DM Serif Display',serif;font-size:32px;color:var(--a1)}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.plan-card{background:var(--ink2);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;transition:border-color 0.2s}
+.plan-card.featured{border-color:rgba(245,166,35,0.3);background:linear-gradient(145deg,rgba(245,166,35,0.05),var(--ink2))}
+.plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--a1),#FF8C00);color:#000;padding:2px 13px;border-radius:100px;font-size:9px;font-weight:700;white-space:nowrap}
+.plan-name{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:4px}
+.plan-price{font-family:'DM Serif Display',serif;font-size:38px;margin-bottom:3px}
+.plan-period{font-size:12px;color:var(--tx2);margin-bottom:14px}
+.plan-features{list-style:none;margin-bottom:18px}
+.plan-features li{font-size:12px;color:var(--tx2);padding:4px 0;display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+.plan-features li::before{content:'✓';color:var(--gn);font-weight:700;flex-shrink:0}
+.plan-features li.no{color:var(--tx3)}.plan-features li.no::before{content:'✕';color:var(--tx3)}
+.plan-features li strong{color:var(--tx)}
+.plan-btn{width:100%;background:linear-gradient(135deg,var(--a1),#FF8C00);color:#000;border:none;padding:11px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-btn.ghost{background:rgba(255,255,255,0.06);color:var(--tx);border:1px solid var(--border)}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:linear-gradient(135deg,#1A3A2A,#143022);color:var(--gn);border:1px solid rgba(34,197,94,0.22);padding:11px 20px;border-radius:12px;font-size:12px;font-weight:600;z-index:9999;transform:translateY(70px);opacity:0;transition:all 0.3s;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.warn{background:linear-gradient(135deg,#3A2A0A,#281A04);color:var(--a1);border-color:rgba(245,166,35,0.22)}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">⚡</div>
+    <div class="brand-text">Tap<span>Connect</span></div>
+  </div>
+  <div class="topbar-right">
+    <div class="notif" onclick="showToast('3 new orders waiting!')"><span>🔔</span><div class="notif-dot"></div></div>
+    <button class="preview-btn" onclick="window.open('customer.html','_blank')">📱 Customer View</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="owner-info">
+      <div class="oi-row">
+        <div class="oi-avatar">🍽️</div>
+        <div>
+          <div class="oi-name">Spice Garden</div>
+          <div class="oi-badge">✅ Verified</div>
+        </div>
+      </div>
+      <div class="oi-plan">Growth Plan · Leicester</div>
+    </div>
+    <div class="nav-sec">Dashboard</div>
+    <div class="nav-item on" id="nav-overview" onclick="showPage('overview',this)"><span class="nav-icon">📊</span>Overview<span class="nav-badge" id="ord-badge">3</span></div>
+    <div class="nav-item" id="nav-orders" onclick="showPage('orders',this)"><span class="nav-icon">🔔</span>Live Orders<span class="nav-badge">3</span></div>
+    <div class="nav-item" id="nav-analytics" onclick="showPage('analytics',this)"><span class="nav-icon">📈</span>Analytics</div>
+    <div class="nav-sec">Management</div>
+    <div class="nav-item" id="nav-menu" onclick="showPage('menu',this)"><span class="nav-icon">📋</span>Menu Manager</div>
+    <div class="nav-item" id="nav-profile" onclick="showPage('profile',this)"><span class="nav-icon">✏️</span>NFC Profile</div>
+    <div class="nav-sec">Growth</div>
+    <div class="nav-item" id="nav-refer" onclick="showPage('refer',this)"><span class="nav-icon">🎁</span>Refer & Earn<span class="nav-earn">£90</span></div>
+    <div class="nav-item" id="nav-plans" onclick="showPage('plans',this)"><span class="nav-icon">💳</span>Plans</div>
+    <div class="sidebar-foot">
+      <div class="sf-link" onclick="window.open('customer.html','_blank')">📱 Preview Customer View</div>
+      <div class="sf-link" onclick="showToast('Signed out','warn')">🚪 Sign Out</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page on" id="page-overview">
+      <div class="welcome-bar">
+        <div><div class="wb-title">Good evening 👋</div><div class="wb-sub">Sunday 15 March 2026 · 3 new orders · Revenue up 18%</div></div>
+        <div class="wb-btns">
+          <button class="btn-g" onclick="showPage('analytics',document.getElementById('nav-analytics'))">📊 Analytics</button>
+          <button class="btn-p" onclick="showPage('orders',document.getElementById('nav-orders'))">🔔 Orders (3)</button>
+        </div>
+      </div>
+      <div class="verified-strip">🎉 <strong>Verified Business Discount Active!</strong> &nbsp;2% off first 2 months — saved £0.58 this billing cycle.</div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">📡 Taps Today</div><div class="kpi-val c-a">147</div><div class="kpi-change"><span class="up">↑ 12%</span> vs yesterday</div></div>
+        <div class="kpi-card"><div class="kpi-label">🔔 Orders Today</div><div class="kpi-val c-g">23</div><div class="kpi-change"><span class="up">↑ 5</span> vs yesterday</div></div>
+        <div class="kpi-card"><div class="kpi-label">💷 Revenue Today</div><div class="kpi-val c-a">£847</div><div class="kpi-change"><span class="up">↑ 18%</span> this week</div></div>
+        <div class="kpi-card"><div class="kpi-label">⭐ Google Reviews</div><div class="kpi-val c-p">89</div><div class="kpi-change"><span class="up">↑ 3</span> this week</div></div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">⚡ Quick Actions</div>
+          <div class="panel-sub">Jump to key areas</div>
+          <div class="qa-grid">
+            <div class="qa" style="background:rgba(244,63,94,0.08);border-color:rgba(244,63,94,0.2);color:var(--rd)" onclick="showPage('orders',document.getElementById('nav-orders'))">🔔 Orders (3)</div>
+            <div class="qa" style="background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.2);color:var(--gn)" onclick="showPage('menu',document.getElementById('nav-menu'))">📋 Edit Menu</div>
+            <div class="qa" style="background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.2);color:var(--a1)" onclick="showPage('refer',document.getElementById('nav-refer'))">🎁 Refer & Earn</div>
+            <div class="qa" style="background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.2);color:var(--pu)" onclick="copyNFCLink()">📋 Copy Link</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🕐 Live Activity</div>
+          <div class="panel-sub">Real-time customer interactions</div>
+          <div class="act-row"><div class="act-dot" style="background:var(--rd)"></div><div class="act-text">🔔 New order — Table 4 — £31.97</div><div class="act-time">1m</div></div>
+          <div class="act-row"><div class="act-dot" style="background:var(--gn)"></div><div class="act-text">⭐ New 5-star Google review</div><div class="act-time">8m</div></div>
+          <div class="act-row"><div class="act-dot" style="background:var(--bl)"></div><div class="act-text">📅 Table booking — 7pm tonight</div><div class="act-time">23m</div></div>
+          <div class="act-row"><div class="act-dot" style="background:var(--rd)"></div><div class="act-text">🔔 New order — Table 7 — £44.50</div><div class="act-time">31m</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">📅 Revenue This Week</div>
+        <div class="panel-sub">Daily breakdown</div>
+        <div id="rev-chart"></div>
+      </div>
+    </div>
+
+    <!-- LIVE ORDERS -->
+    <div class="page" id="page-orders">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-family:'DM Serif Display',serif;font-size:22px">🔔 Live Orders</div>
+        <div id="orders-count-badge" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.22);color:var(--rd);padding:4px 11px;border-radius:100px;font-size:11px;font-weight:700;animation:pulse 2s infinite">3 Active</div>
+      </div>
+      <div class="privacy-note">🔒 <strong>100% Private & Secure.</strong> Orders arrive directly in TapConnect — no WhatsApp leaks, full order history, customer data protected.</div>
+      <div class="order-grid" id="order-grid"></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Taps (30 days)</div><div class="kpi-val c-a">3,841</div><div class="kpi-change"><span class="up">↑ 18%</span> vs last month</div></div>
+        <div class="kpi-card"><div class="kpi-label">Orders (30 days)</div><div class="kpi-val c-g">312</div><div class="kpi-change"><span class="up">↑ 24%</span> vs last month</div></div>
+        <div class="kpi-card"><div class="kpi-label">Review Rate</div><div class="kpi-val c-p">31%</div><div class="kpi-change">of tappers leave review</div></div>
+        <div class="kpi-card"><div class="kpi-label">Order Rate</div><div class="kpi-val c-b">24%</div><div class="kpi-change">tap → order placed</div></div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">🔗 What Customers Click Most</div>
+          <div class="panel-sub">Feature usage breakdown</div>
+          <div id="link-chart"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🕐 Peak Tap Times</div>
+          <div class="panel-sub">Best times to run promotions</div>
+          <div id="time-chart"></div>
+        </div>
+      </div>
+      <div class="panel" style="background:rgba(245,166,35,0.04);border-color:rgba(245,166,35,0.15)">
+        <div class="panel-title">🤖 AI Insights <span style="font-size:10px;background:rgba(245,166,35,0.12);color:var(--a1);padding:2px 7px;border-radius:100px;margin-left:5px">Pro Plan</span></div>
+        <div class="panel-sub">Smart recommendations from your data</div>
+        <div class="act-row" style="padding:12px;margin-bottom:9px"><span style="font-size:18px">💡</span><div class="act-text" style="font-size:11px;line-height:1.6"><strong>Friday 7–9pm is your peak ordering time.</strong> Post Instagram Stories at 5pm on Fridays to drive pre-bookings — estimated +15% revenue uplift.</div></div>
+        <div class="act-row" style="padding:12px;background:rgba(34,197,94,0.03)"><span style="font-size:18px">📈</span><div class="act-text" style="font-size:11px;line-height:1.6"><strong>Google reviews up 34% since your NFC setup.</strong> Customers review at peak satisfaction. Consider adding a 2nd sticker at the exit door to capture more reviews.</div></div>
+      </div>
+    </div>
+
+    <!-- MENU MANAGER -->
+    <div class="page" id="page-menu">
+      <div class="panel">
+        <div class="panel-title">📋 Menu Management</div>
+        <div class="panel-sub">Changes go live instantly on the customer ordering screen</div>
+        <div class="menu-filters">
+          <button class="mf-btn on" onclick="filterMenu('all',this)">All Items</button>
+          <button class="mf-btn" onclick="filterMenu('starters',this)">Starters</button>
+          <button class="mf-btn" onclick="filterMenu('mains',this)">Mains</button>
+          <button class="mf-btn" onclick="filterMenu('breads',this)">Breads</button>
+          <button class="mf-btn" onclick="filterMenu('drinks',this)">Drinks</button>
+        </div>
+        <div class="menu-manage-grid" id="menu-manage-grid"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">➕ Add New Item</div>
+        <div class="form-row-2">
+          <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" placeholder="e.g. Dal Makhani"></div>
+          <div class="form-group"><label class="form-label">Price (£)</label><input class="form-input" type="number" step="0.01" placeholder="e.g. 11.99"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Description</label><input class="form-input" placeholder="Brief, appetising description"></div>
+        <div class="form-row-2">
+          <div class="form-group"><label class="form-label">Category</label><select class="form-input"><option>Starters</option><option>Main Course</option><option>Breads & Rice</option><option>Drinks & Desserts</option></select></div>
+          <div class="form-group"><label class="form-label">Tag</label><select class="form-input"><option>None</option><option>Vegetarian</option><option>Spicy</option><option>Gluten Free</option><option>Popular</option></select></div>
+        </div>
+        <button class="save-btn" onclick="showToast('✅ Item added to menu!')">Add to Menu →</button>
+      </div>
+    </div>
+
+    <!-- NFC PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">✏️ Edit NFC Profile</div>
+          <div class="panel-sub">Changes go live instantly on customer tap</div>
+          <div class="form-group"><label class="form-label">Business Name</label><input class="form-input" id="pf-name" value="Spice Garden Restaurant" oninput="updatePreview(this.value)"></div>
+          <div class="form-group"><label class="form-label">Tagline</label><input class="form-input" value="Authentic Indian Cuisine · Leicester"></div>
+          <div class="form-row-2">
+            <div class="form-group"><label class="form-label">Phone</label><input class="form-input" value="0116 234 5678"></div>
+            <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" value="447911234567"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Google Review Link</label><input class="form-input" value="https://g.page/r/example"></div>
+          <div class="form-group"><label class="form-label">Booking Link</label><input class="form-input" value="https://spicegarden.co.uk/book"></div>
+          <div class="form-group"><label class="form-label">Instagram</label><input class="form-input" value="spicegarden_leicester"></div>
+          <button class="save-btn" onclick="showToast('✅ Profile saved and now live!')">💾 Save & Go Live</button>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-title">👁️ Live Customer Preview</div>
+            <div class="panel-sub">What customers see when they tap</div>
+            <div class="profile-preview">
+              <div class="pp-avatar">🍽️</div>
+              <div class="pp-name" id="preview-name">Spice Garden Restaurant</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px">Authentic Indian Cuisine · Leicester</div>
+              <div class="pp-vb">✅ Verified Business</div>
+              <div class="pp-links">
+                <div class="pp-link">⭐ Leave a Google Review</div>
+                <div class="pp-link">🍽️ View Menu & Order</div>
+                <div class="pp-link">📅 Book a Table</div>
+              </div>
+            </div>
+            <div class="nfc-url-box">
+              <div class="nfc-url-label">Your NFC Profile URL</div>
+              <div class="nfc-url-val" id="nfc-url-display">tapconnect.co.uk/b/spice-garden-restaurant</div>
+              <button class="copy-btn" onclick="copyNFCLink()">📋 Copy Link</button>
+            </div>
+          </div>
+          <div class="panel" style="background:rgba(245,166,35,0.04);border-color:rgba(245,166,35,0.14)">
+            <div class="panel-title">💡 How to Programme Your NFC Card</div>
+            <div class="panel-sub">Takes 2 minutes with your Android phone</div>
+            <div class="act-row"><div class="act-dot" style="background:var(--a1)"></div><div class="act-text" style="font-size:11px">Download <strong>NFC Tools</strong> from Google Play (free)</div></div>
+            <div class="act-row"><div class="act-dot" style="background:var(--a1)"></div><div class="act-text" style="font-size:11px">Tap <strong>Write</strong> → Add Record → URL/URI</div></div>
+            <div class="act-row"><div class="act-dot" style="background:var(--a1)"></div><div class="act-text" style="font-size:11px">Paste your TapConnect profile URL above</div></div>
+            <div class="act-row"><div class="act-dot" style="background:var(--gn)"></div><div class="act-text" style="font-size:11px">Hold phone to sticker → feel vibration → done!</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFER & EARN -->
+    <div class="page" id="page-refer">
+      <div class="refer-hero">
+        <div class="refer-title">Earn <span>£90</span> Referring 5 Friends</div>
+        <div class="refer-sub">Share TapConnect with UK business owners. Earn <strong style="color:var(--a1)">£18 for every business that joins the Growth or Pro plan</strong>. No cap — earn forever.</div>
+        <div class="code-box">
+          <span style="font-size:12px;color:var(--tx2)">Your code:</span>
+          <div class="code-val">TAPCON-SPG847</div>
+          <button class="copy-code" onclick="showToast('Referral code copied!')">📋 Copy</button>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--tx2);margin-bottom:8px">Progress — 2 of 5 confirmed</div>
+        <div class="progress-circles">
+          <div class="p-step"><div class="p-circle p-done">✓</div><div class="p-label">Confirmed</div></div>
+          <div class="p-step"><div class="p-circle p-done">✓</div><div class="p-label">Confirmed</div></div>
+          <div class="p-step"><div class="p-circle p-active">3</div><div class="p-label">Pending</div></div>
+          <div class="p-step"><div class="p-circle p-pend">4</div><div class="p-label">Pending</div></div>
+          <div class="p-step"><div class="p-circle p-pend">5</div><div class="p-label">Pending</div></div>
+        </div>
+        <div class="earn-display">
+          <div><div class="earn-label">Total earned so far</div><div style="font-size:10px;color:var(--tx2)">2 confirmed referrals</div></div>
+          <div class="earn-val">£36</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">📤 Share Your Code</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+            <button style="background:rgba(37,211,102,0.09);border:1px solid rgba(37,211,102,0.22);border-radius:9px;padding:12px;color:#25D366;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('WhatsApp share copied!')">💬 Share via WhatsApp</button>
+            <button style="background:rgba(225,48,108,0.09);border:1px solid rgba(225,48,108,0.22);border-radius:9px;padding:12px;color:#E1306C;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('Instagram caption copied!')">📸 Share on Instagram</button>
+            <button style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:9px;padding:12px;color:var(--tx);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('Referral link copied!')">🔗 Copy Referral Link</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">💳 Recent Referrals</div>
+          <div class="act-row" style="padding:10px;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.12)"><div class="act-text">FitZone Gym · March 2026</div><div style="color:var(--gn);font-weight:700;font-size:14px">+£18</div></div>
+          <div class="act-row" style="padding:10px;margin-top:7px;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.12)"><div class="act-text">Glamour Salon · March 2026</div><div style="color:var(--gn);font-weight:700;font-size:14px">+£18</div></div>
+          <div class="act-row" style="padding:10px;margin-top:7px;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.12)"><div class="act-text">Restaurant · Pending confirmation</div><div style="color:var(--a1);font-weight:600;font-size:12px">Pending</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="page" id="page-plans">
+      <div class="current-plan-bar">
+        <div><div class="cp-lbl">Current Plan</div><div class="cp-name">Growth Plan</div><div class="cp-info">Renews April 2026 · ✅ Verified 2% discount active</div></div>
+        <div class="cp-price">£29<span style="font-size:14px;color:var(--tx2)">/mo</span></div>
+      </div>
+      <div class="verified-strip">✅ <strong>Verified Discount:</strong> You're saving 2% on your first 2 months — £28.42 this cycle instead of £29.</div>
+      <div class="plans-grid">
+        <div class="plan-card"><div class="plan-name">Starter</div><div class="plan-price">£10</div><div class="plan-period">per month</div><ul class="plan-features"><li><strong>1 NFC Profile</strong></li><li>Google Review link</li><li>WhatsApp & Instagram</li><li>Basic tap analytics</li><li class="no">In-app ordering</li><li class="no">Digital menu & bill</li></ul><button class="plan-btn ghost" onclick="showToast('Downgrading...')">Downgrade</button></div>
+        <div class="plan-card featured"><div class="plan-badge">Current Plan ✓</div><div class="plan-name">Growth</div><div class="plan-price" style="color:var(--a1)">£29</div><div class="plan-period">per month</div><ul class="plan-features"><li><strong>5 NFC Profiles</strong></li><li><strong>In-app ordering (private)</strong></li><li><strong>Digital menu + live bill</strong></li><li>Full analytics dashboard</li><li>WhatsApp Broadcast Manager</li><li>Refer & Earn programme</li></ul><button class="plan-btn ghost" style="opacity:0.4;cursor:default">Active Plan</button></div>
+        <div class="plan-card"><div class="plan-name">Pro</div><div class="plan-price" style="color:var(--pu)">£49</div><div class="plan-period">per month</div><ul class="plan-features"><li><strong>Unlimited profiles</strong></li><li>AI insights & optimiser</li><li>Competitor benchmarking</li><li>Monthly health reports</li><li><strong>£18 per referral earned</strong></li><li>White label branding</li></ul><button class="plan-btn" onclick="showToast('Upgrade initiated!')">Upgrade to Pro</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="owner-toast"></div>
+
+<script>
+const ORDERS=[
+  {id:1,table:'4',time:'2 min ago',status:'new',items:[{n:'Butter Chicken',q:2,p:29.98},{n:'Garlic Naan',q:3,p:8.97},{n:'Mango Lassi',q:2,p:7.98}],notes:'Extra spicy — no coriander',total:46.93},
+  {id:2,table:'7',time:'9 min ago',status:'prep',items:[{n:'Chicken Tikka Masala',q:1,p:13.99},{n:'Lamb Rogan Josh',q:1,p:15.99},{n:'Pilau Rice',q:2,p:6.98}],notes:'',total:36.96},
+  {id:3,table:'2',time:'16 min ago',status:'ready',items:[{n:'Onion Bhaji',q:2,p:11.98},{n:'Seekh Kebab',q:1,p:7.99},{n:'Masala Chai',q:2,p:5.98}],notes:'Nut allergy confirmed',total:25.95},
+];
+const MENU_ITEMS=[
+  {id:1,n:'Onion Bhaji',p:5.99,e:'🧅',cat:'starters',av:true},
+  {id:2,n:'Seekh Kebab',p:7.99,e:'🍢',cat:'starters',av:true},
+  {id:3,n:'Chicken Tikka',p:8.99,e:'🍗',cat:'starters',av:true},
+  {id:4,n:'Butter Chicken',p:14.99,e:'🍛',cat:'mains',av:true},
+  {id:5,n:'Tikka Masala',p:13.99,e:'🍲',cat:'mains',av:true},
+  {id:6,n:'Lamb Rogan Josh',p:15.99,e:'🥘',cat:'mains',av:true},
+  {id:7,n:'Paneer Makhani',p:12.99,e:'🟨',cat:'mains',av:false},
+  {id:8,n:'Garlic Naan',p:2.99,e:'🫓',cat:'breads',av:true},
+  {id:9,n:'Pilau Rice',p:3.49,e:'🍚',cat:'breads',av:true},
+  {id:10,n:'Mango Lassi',p:3.99,e:'🥭',cat:'drinks',av:true},
+  {id:11,n:'Masala Chai',p:2.99,e:'☕',cat:'drinks',av:true},
+  {id:12,n:'Gulab Jamun',p:4.99,e:'🟤',cat:'drinks',av:true},
+];
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+id)?.classList.add('on');
+  if(el)el.classList.add('on');
+  if(id==='orders')renderOrders();
+  if(id==='analytics')renderCharts();
+  if(id==='menu')renderMenuItems('all');
+  if(id==='overview')renderRevChart();
+}
+
+function renderOrders(){
+  const sm={new:'🔴 New',prep:'🟡 Preparing',ready:'🟢 Ready',done:'✅ Done'};
+  const sc={new:'st-new',prep:'st-prep',ready:'st-ready',done:'st-done'};
+  const active=ORDERS.filter(o=>o.status!=='done').length;
+  document.getElementById('orders-count-badge').textContent=active+' Active';
+  document.getElementById('order-grid').innerHTML=ORDERS.map(o=>`
+    <div class="order-card">
+      <div class="oc-top">
+        <div><div class="oc-table">Table ${o.table}</div><div class="oc-time">${o.time}</div></div>
+        <span class="oc-status ${sc[o.status]}">${sm[o.status]}</span>
+      </div>
+      <div class="oc-items">${o.items.map(i=>`<div class="oc-item-row"><span>${i.q}× ${i.n}</span><span>£${i.p.toFixed(2)}</span></div>`).join('')}</div>
+      ${o.notes?`<div class="oc-notes">📝 ${o.notes}</div>`:''}
+      <div class="oc-foot">
+        <div class="oc-total">£${o.total.toFixed(2)}</div>
+        ${o.status==='new'?`<button class="oc-btn btn-accept" onclick="updOrder(${o.id},'prep')">Accept</button><button class="oc-btn btn-reject" onclick="updOrder(${o.id},'done')">Reject</button>`
+        :o.status==='prep'?`<button class="oc-btn btn-ready" onclick="updOrder(${o.id},'ready')">Mark Ready</button>`
+        :o.status==='ready'?`<button class="oc-btn btn-done" onclick="updOrder(${o.id},'done')">Mark Done</button>`
+        :`<button class="oc-btn btn-done" style="opacity:0.4;cursor:default">Completed</button>`}
+      </div>
+    </div>`).join('');
+}
+
+function updOrder(id,status){
+  const o=ORDERS.find(x=>x.id===id);if(o)o.status=status;
+  renderOrders();
+  const msgs={prep:'✅ Order accepted!',ready:'🟢 Ready to collect!',done:'✅ Order completed'};
+  showToast(msgs[status]||'Updated');
+}
+
+function renderMenuItems(cat){
+  const items=cat==='all'?MENU_ITEMS:MENU_ITEMS.filter(i=>i.cat===cat);
+  document.getElementById('menu-manage-grid').innerHTML=items.map(i=>`
+    <div class="mm-item">
+      <div class="mm-dot${i.av?'':' off'}"></div>
+      <div class="mm-emoji">${i.e}</div>
+      <div style="flex:1;min-width:0">
+        <div class="mm-name">${i.n}</div>
+        <div class="mm-price">£${i.p.toFixed(2)}</div>
+        <div class="mm-actions">
+          <button class="mm-btn mm-edit" onclick="showToast('Editing ${i.n}...')">Edit</button>
+          <button class="mm-btn mm-toggle" onclick="showToast('${i.n} ${i.av?'disabled':'enabled'}!')">${i.av?'Disable':'Enable'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterMenu(cat,el){
+  document.querySelectorAll('.mf-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderMenuItems(cat);
+}
+
+function makeChart(id,data,color){
+  const el=document.getElementById(id);if(!el)return;
+  const max=Math.max(...data.map(d=>d.v),1);
+  el.innerHTML=data.map(d=>`
+    <div class="chart-row">
+      <div class="chart-lbl">${d.l}</div>
+      <div class="chart-track"><div class="chart-fill" style="width:${Math.round(d.v/max*100)}%;background:${color}"></div></div>
+      <div class="chart-val" style="color:${color}">${d.v}</div>
+    </div>`).join('');
+}
+
+function renderRevChart(){makeChart('rev-chart',[{l:'Mon',v:620},{l:'Tue',v:480},{l:'Wed',v:710},{l:'Thu',v:580},{l:'Fri',v:920},{l:'Sat',v:847},{l:'Sun',v:390}],`var(--a1)`)}
+function renderCharts(){
+  makeChart('link-chart',[{l:'Menu/Order',v:487},{l:'Review',v:312},{l:'Booking',v:198},{l:'Instagram',v:164},{l:'Phone',v:89}],`var(--gn)`);
+  makeChart('time-chart',[{l:'9-11am',v:78},{l:'11-1pm',v:134},{l:'1-3pm',v:112},{l:'5-7pm',v:198},{l:'7-9pm',v:267}],`var(--a1)`);
+}
+
+function updatePreview(name){
+  document.getElementById('preview-name').textContent=name||'Your Business';
+  const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  document.getElementById('nfc-url-display').textContent='tapconnect.co.uk/b/'+slug;
+}
+function copyNFCLink(){
+  const url='https://'+document.getElementById('nfc-url-display').textContent;
+  navigator.clipboard?.writeText(url);
+  showToast('NFC link copied!');
+}
+function showToast(msg,type){
+  const t=document.getElementById('owner-toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+renderOrders();renderRevChart();renderMenuItems('all');
+</script>
+</body>
+</html>

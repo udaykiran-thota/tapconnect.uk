@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaplinkPro — Founder Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#07090F;color:#F0F6FF;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:56px;background:#0D1117;border-bottom:1px solid #1e2d3d;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,#60A5FA,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.founder-badge{background:linear-gradient(135deg,#F59E0B,#D97706);color:#000;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.issue-alert{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#EF4444;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;animation:pulse 2s infinite}
+.layout{display:flex;flex:1}
+.sidebar{width:200px;background:#0D1117;border-right:1px solid #1e2d3d;display:flex;flex-direction:column;position:fixed;top:56px;left:0;bottom:0;overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:#1e2d3d}
+.founder-info{margin:12px 12px 8px;background:linear-gradient(135deg,rgba(239,68,68,0.09),rgba(185,28,28,0.04));border:1px solid rgba(239,68,68,0.2);border-radius:11px;padding:12px}
+.fi-title{font-size:14px;font-weight:800;margin-bottom:2px}
+.fi-sub{font-size:10px;color:#6B7FA3;margin-bottom:6px}
+.fi-stat{font-size:11px;font-weight:600;color:#EF4444}
+.nav-section{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2A3A50;padding:14px 16px 5px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:8px 12px;margin:0 8px 1px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:#6B7FA3;transition:all 0.15s}
+.nav-link:hover{background:rgba(255,255,255,0.04);color:#F0F6FF}
+.nav-link.active{background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.15)}
+.nav-link .icon{font-size:15px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:#EF4444;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:100px;animation:pulse 2s infinite}
+.nav-warn{margin-left:auto;background:#F59E0B;color:#000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:100px}
+.main{margin-left:200px;flex:1;padding:20px}
+.page{display:none}.page.active{display:block}
+.page-header{font-size:22px;font-weight:800;margin-bottom:4px}
+.page-sub{font-size:13px;color:#6B7FA3;margin-bottom:20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.kpi{border-radius:13px;padding:16px}
+.kpi-blue{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(6,182,212,0.06));border:1px solid rgba(59,130,246,0.2)}
+.kpi-green{background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(5,150,105,0.06));border:1px solid rgba(16,185,129,0.2)}
+.kpi-gold{background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(217,119,6,0.06));border:1px solid rgba(245,158,11,0.2)}
+.kpi-red{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(185,28,28,0.06));border:1px solid rgba(239,68,68,0.2)}
+.kpi-purple{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(109,40,217,0.06));border:1px solid rgba(139,92,246,0.2)}
+.kpi-label{font-size:10px;font-weight:600;color:#6B7FA3;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.kpi-value{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:3px}
+.kpi-change{font-size:11px;color:#6B7FA3;display:flex;align-items:center;gap:4px}
+.up{color:#10B981}.down{color:#EF4444}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+.panel{background:#111827;border:1px solid #1e2d3d;border-radius:14px;padding:18px;margin-bottom:16px}
+.panel-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.panel-sub{font-size:12px;color:#6B7FA3;margin-bottom:14px}
+.chart-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.chart-label{font-size:11px;color:#6B7FA3;width:72px;text-align:right;flex-shrink:0}
+.chart-bar-wrap{flex:1;background:rgba(255,255,255,0.04);border-radius:3px;height:8px;overflow:hidden}
+.chart-bar{height:100%;border-radius:3px;transition:width 1.2s ease}
+.chart-value{font-size:11px;font-weight:600;width:38px}
+.activity-row{display:flex;align-items:center;gap:10px;padding:9px 11px;background:rgba(255,255,255,0.025);border-radius:8px;margin-bottom:6px}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.act-text{font-size:12px;flex:1;line-height:1.4}.act-time{font-size:10px;color:#6B7FA3;white-space:nowrap}
+/* ISSUES */
+.issue-card{background:#111827;border:1px solid #1e2d3d;border-radius:13px;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px}
+.issue-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dot-critical{background:#EF4444}
+.dot-warning{background:#F59E0B}
+.dot-info{background:#60A5FA}
+.dot-resolved{background:#10B981}
+.issue-body{flex:1}
+.issue-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.issue-desc{font-size:12px;color:#6B7FA3;line-height:1.5;margin-bottom:8px}
+.issue-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.issue-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px}
+.badge-critical{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.2)}
+.badge-warning{background:rgba(245,158,11,0.12);color:#F59E0B;border:1px solid rgba(245,158,11,0.2)}
+.badge-info{background:rgba(59,130,246,0.12);color:#60A5FA;border:1px solid rgba(59,130,246,0.2)}
+.badge-resolved{background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.2)}
+.action-btn{padding:5px 11px;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.action-btn:active{transform:scale(0.94)}
+.btn-critical{background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2)}
+.btn-warning{background:rgba(245,158,11,0.1);color:#F59E0B;border:1px solid rgba(245,158,11,0.2)}
+.btn-blue{background:rgba(59,130,246,0.1);color:#60A5FA;border:1px solid rgba(59,130,246,0.2)}
+.btn-green{background:rgba(16,185,129,0.1);color:#10B981;border:1px solid rgba(16,185,129,0.2)}
+.issue-time{font-size:10px;color:#6B7FA3;flex-shrink:0;margin-top:2px}
+/* BUSINESS LIST */
+.biz-filters{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.biz-filter{padding:6px 13px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid #1e2d3d;color:#6B7FA3;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.biz-filter.active{background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);color:#60A5FA}
+.biz-row{background:#111827;border:1px solid #1e2d3d;border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color 0.2s}
+.biz-row:hover{border-color:rgba(59,130,246,0.2)}
+.biz-emoji{font-size:22px;flex-shrink:0}
+.biz-info{flex:1;min-width:0}
+.biz-name{font-size:13px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-meta{font-size:11px;color:#6B7FA3}
+.biz-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap}
+.status-active{background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.2)}
+.status-new{background:rgba(59,130,246,0.12);color:#60A5FA;border:1px solid rgba(59,130,246,0.2)}
+.status-warn{background:rgba(245,158,11,0.12);color:#F59E0B;border:1px solid rgba(245,158,11,0.2)}
+.status-churn{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.2)}
+/* REVENUE TABLE */
+.rev-table{background:#111827;border:1px solid #1e2d3d;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.rt-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px}
+.rt-row:last-child{border-bottom:none;font-weight:700}
+.rt-row .label{color:#6B7FA3}
+.rt-row .value{font-weight:600}
+.rt-row.total .label{color:#F0F6FF;font-size:14px}
+.rt-row.total .value{color:#10B981;font-size:16px}
+.rt-row.negative .value{color:#EF4444}
+/* CHURN */
+.churn-row{background:#111827;border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.churn-emoji{font-size:20px;flex-shrink:0}
+.churn-info{flex:1;min-width:0}
+.churn-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.churn-meta{font-size:11px;color:#EF4444}
+.churn-days{font-size:20px;font-weight:800;color:#EF4444;flex-shrink:0}
+/* SUPPORT */
+.ticket-row{background:#111827;border:1px solid #1e2d3d;border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.ticket-icon{font-size:18px;flex-shrink:0}
+.ticket-info{flex:1}
+.ticket-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.ticket-desc{font-size:11px;color:#6B7FA3;margin-bottom:8px;line-height:1.4}
+.ticket-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ticket-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.ticket-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#10B981,#059669);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:320px;box-shadow:0 8px 24px rgba(16,185,129,0.3)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.warn{background:linear-gradient(135deg,#F59E0B,#D97706)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-wrap">
+    <div class="logo">TaplinkPro</div>
+    <div class="founder-badge">👑 FOUNDER</div>
+  </div>
+  <div class="topbar-right">
+    <div class="issue-alert" onclick="showPage('issues',document.getElementById('nav-issues'))">⚠️ 2 Active Issues</div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="founder-info">
+      <div class="fi-title">Platform Overview</div>
+      <div class="fi-sub">TaplinkPro UK · March 2026</div>
+      <div class="fi-stat">⚠️ 2 issues need attention</div>
+    </div>
+    <div class="nav-section">Platform</div>
+    <div class="nav-link active" id="nav-overview" onclick="showPage('overview',this)"><span class="icon">📊</span>Overview</div>
+    <div class="nav-link" id="nav-issues" onclick="showPage('issues',this)"><span class="icon">🚨</span>Issues<span class="nav-badge">2</span></div>
+    <div class="nav-link" id="nav-businesses" onclick="showPage('businesses',this)"><span class="icon">🏪</span>Businesses</div>
+    <div class="nav-link" id="nav-revenue" onclick="showPage('revenue',this)"><span class="icon">💷</span>Revenue</div>
+    <div class="nav-section">Risk</div>
+    <div class="nav-link" id="nav-churn" onclick="showPage('churn',this)"><span class="icon">📉</span>Churn Risk<span class="nav-warn">34</span></div>
+    <div class="nav-link" id="nav-support" onclick="showPage('support',this)"><span class="icon">🎧</span>Support Tickets</div>
+    <div class="nav-section">Growth</div>
+    <div class="nav-link" id="nav-cities" onclick="showPage('cities',this)"><span class="icon">📍</span>Cities</div>
+    <div class="nav-link" id="nav-referrals" onclick="showPage('referrals',this)"><span class="icon">🎁</span>Referral Payouts</div>
+  </div>
+
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">Platform Overview</div>
+      <div class="page-sub">Sunday 15 March 2026 — Real-time founder dashboard</div>
+      <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:13px 16px;margin-bottom:18px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showPage('issues',document.getElementById('nav-issues'))">
+        <span style="font-size:18px">🚨</span>
+        <div style="flex:1"><strong style="color:#EF4444">2 active issues require your attention</strong><div style="font-size:12px;color:#6B7FA3;margin-top:2px">1 failed payment · 1 data error reported by business owner — click to review</div></div>
+        <span style="color:#EF4444;font-weight:700">→</span>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi kpi-green"><div class="kpi-label">Total Businesses</div><div class="kpi-value" style="color:#10B981">2,847</div><div class="kpi-change"><span class="up">+23 this week</span></div></div>
+        <div class="kpi kpi-blue"><div class="kpi-label">Monthly Revenue (MRR)</div><div class="kpi-value" style="color:#60A5FA">£41,200</div><div class="kpi-change"><span class="up">↑ £3,400 vs last month</span></div></div>
+        <div class="kpi kpi-gold"><div class="kpi-label">Active Subscriptions</div><div class="kpi-value" style="color:#F59E0B">2,614</div><div class="kpi-change">92% retention rate</div></div>
+        <div class="kpi kpi-red"><div class="kpi-label">Churn Risk</div><div class="kpi-value" style="color:#EF4444">34</div><div class="kpi-change">not tapped in 7+ days</div></div>
+        <div class="kpi kpi-purple"><div class="kpi-label">New This Week</div><div class="kpi-value" style="color:#8B5CF6">23</div><div class="kpi-change"><span class="up">↑ 5 vs last week</span></div></div>
+        <div class="kpi kpi-green"><div class="kpi-label">Referral Payouts</div><div class="kpi-value" style="color:#10B981">£2,160</div><div class="kpi-change">paid this month</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">📈 Platform Growth This Week</div>
+        <div class="panel-sub">New businesses registering daily</div>
+        <div id="growth-chart"></div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">🆕 Recent Signups</div>
+          <div class="panel-sub">Latest businesses joining TaplinkPro</div>
+          <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">🍽️ Curry Palace, Birmingham — Growth Plan</div><div class="act-time">2h ago</div></div>
+          <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">💈 Prestige Salon, Leicester — Starter Plan</div><div class="act-time">5h ago</div></div>
+          <div class="activity-row"><div class="act-dot" style="background:#F59E0B"></div><div class="act-text">🏭 Textile World, Bradford — Advanced Plan</div><div class="act-time">8h ago</div></div>
+          <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">☕ Bean & Beyond Cafe, Nottingham — Starter</div><div class="act-time">1d ago</div></div>
+          <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">🏋️ PowerHouse Gym, Manchester — Growth</div><div class="act-time">1d ago</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">💷 Revenue by Plan</div>
+          <div class="panel-sub">Breakdown of current MRR</div>
+          <div id="plan-chart"></div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:9px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;font-weight:600">Net MRR</span>
+            <span style="font-size:20px;font-weight:800;color:#10B981">£41,200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUES -->
+    <div class="page" id="page-issues">
+      <div class="page-header">🚨 Active Issues</div>
+      <div class="page-sub">Issues requiring your action as founder</div>
+
+      <div style="font-size:14px;font-weight:700;color:#EF4444;margin-bottom:12px">🔴 Critical (1)</div>
+      <div class="issue-card" style="border-color:rgba(239,68,68,0.25);background:rgba(239,68,68,0.03)">
+        <div class="issue-dot dot-critical"></div>
+        <div class="issue-body">
+          <div class="issue-title">Payment Failed — Subscription Lapsed</div>
+          <div class="issue-desc">Spice Palace (Manchester, Starter Plan) — 3 consecutive failed payment attempts. Customer profile is still live but subscription expired 2 days ago. No response to automated emails.</div>
+          <div class="issue-meta">
+            <span class="issue-badge badge-critical">🔴 Critical</span>
+            <span style="font-size:10px;color:#6B7FA3">Spice Palace Manchester</span>
+            <span style="font-size:10px;color:#6B7FA3">Starter Plan · £15/mo</span>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+            <button class="action-btn btn-critical" onclick="showToast('Email sent to Spice Palace Manchester!')">📧 Send Email</button>
+            <button class="action-btn btn-warning" onclick="showToast('WhatsApp message sent to owner!')">💬 WhatsApp Owner</button>
+            <button class="action-btn btn-blue" onclick="showToast('Subscription suspended — profile offline')">⏸ Suspend Profile</button>
+            <button class="action-btn btn-green" onclick="showToast('Marked as resolved!')">✅ Mark Resolved</button>
+          </div>
+        </div>
+        <div class="issue-time">2 days ago</div>
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:#F59E0B;margin-bottom:12px;margin-top:8px">🟡 Warning (1)</div>
+      <div class="issue-card" style="border-color:rgba(245,158,11,0.2)">
+        <div class="issue-dot dot-warning"></div>
+        <div class="issue-body">
+          <div class="issue-title">Business Reporting Incorrect Tap Data</div>
+          <div class="issue-desc">FitLife Gym (Leicester, Growth Plan) — Owner reporting their tap count showing 0 for last 3 days, but they are definitely using the NFC cards. Possible NFC card corruption or URL mismatch.</div>
+          <div class="issue-meta">
+            <span class="issue-badge badge-warning">🟡 Warning</span>
+            <span style="font-size:10px;color:#6B7FA3">FitLife Gym Leicester</span>
+            <span style="font-size:10px;color:#6B7FA3">Growth Plan · £29/mo</span>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+            <button class="action-btn btn-blue" onclick="showToast('Checking system logs for FitLife Gym...')">🔍 Investigate Logs</button>
+            <button class="action-btn btn-warning" onclick="showToast('Support ticket opened for FitLife Gym!')">🎧 Open Support Ticket</button>
+            <button class="action-btn btn-blue" onclick="showToast('Profile URL checked — sending reprogramming guide!')">📱 Send NFC Guide</button>
+            <button class="action-btn btn-green" onclick="showToast('Marked as resolved!')">✅ Mark Resolved</button>
+          </div>
+        </div>
+        <div class="issue-time">1 day ago</div>
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:#10B981;margin-bottom:12px;margin-top:16px">✅ Recently Resolved (2)</div>
+      <div class="issue-card" style="background:rgba(16,185,129,0.03);border-color:rgba(16,185,129,0.15)">
+        <div class="issue-dot dot-resolved"></div>
+        <div class="issue-body">
+          <div class="issue-title">Profile Link Not Loading — CDN Cache Issue</div>
+          <div class="issue-desc">Taj Mahal Restaurant (Leicester) — Profile page returning 404 for 2 hours. Root cause: CDN cache not cleared after profile URL change. Resolved by cache purge.</div>
+          <div class="issue-meta"><span class="issue-badge badge-resolved">✅ Resolved in 2h</span><span style="font-size:10px;color:#6B7FA3">3 days ago</span></div>
+        </div>
+      </div>
+      <div class="issue-card" style="background:rgba(16,185,129,0.03);border-color:rgba(16,185,129,0.15)">
+        <div class="issue-dot dot-resolved"></div>
+        <div class="issue-body">
+          <div class="issue-title">Business Owner Locked Out of Dashboard</div>
+          <div class="issue-desc">Glamour Salon (Birmingham) — Owner forgot password, automated reset not working due to spam filter. Manual reset sent via SMS.</div>
+          <div class="issue-meta"><span class="issue-badge badge-resolved">✅ Resolved in 4h</span><span style="font-size:10px;color:#6B7FA3">5 days ago</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUSINESSES -->
+    <div class="page" id="page-businesses">
+      <div class="page-header">🏪 All Registered Businesses</div>
+      <div class="page-sub">2,847 businesses across the UK</div>
+      <div class="kpi-grid" style="margin-bottom:14px">
+        <div class="kpi kpi-green"><div class="kpi-label">Restaurant</div><div class="kpi-value" style="color:#10B981">847</div><div class="kpi-change">largest sector</div></div>
+        <div class="kpi kpi-purple"><div class="kpi-label">Salon / Barber</div><div class="kpi-value" style="color:#8B5CF6">429</div><div class="kpi-change">fastest growing</div></div>
+        <div class="kpi kpi-blue"><div class="kpi-label">Gym / PT</div><div class="kpi-value" style="color:#60A5FA">312</div><div class="kpi-change">high retention</div></div>
+        <div class="kpi kpi-gold"><div class="kpi-label">Other</div><div class="kpi-value" style="color:#F59E0B">1,259</div><div class="kpi-change">9 more sectors</div></div>
+      </div>
+      <div class="biz-filters">
+        <button class="biz-filter active" onclick="filterBiz('all',this)">All (2,847)</button>
+        <button class="biz-filter" onclick="filterBiz('restaurant',this)">🍽️ Restaurant</button>
+        <button class="biz-filter" onclick="filterBiz('gym',this)">🏋️ Gym</button>
+        <button class="biz-filter" onclick="filterBiz('salon',this)">💈 Salon</button>
+        <button class="biz-filter" onclick="filterBiz('new',this)">🆕 New This Week</button>
+        <button class="biz-filter" onclick="filterBiz('issue',this)">⚠️ Has Issues</button>
+      </div>
+      <div id="biz-list"></div>
+    </div>
+
+    <!-- REVENUE -->
+    <div class="page" id="page-revenue">
+      <div class="page-header">💷 Revenue Dashboard</div>
+      <div class="page-sub">Financial overview of TaplinkPro platform</div>
+      <div class="kpi-grid">
+        <div class="kpi kpi-green"><div class="kpi-label">MRR</div><div class="kpi-value" style="color:#10B981">£41,200</div><div class="kpi-change"><span class="up">↑ £3,400 this month</span></div></div>
+        <div class="kpi kpi-blue"><div class="kpi-label">ARR (Projected)</div><div class="kpi-value" style="color:#60A5FA">£494k</div><div class="kpi-change">on current trajectory</div></div>
+        <div class="kpi kpi-gold"><div class="kpi-label">ARPU</div><div class="kpi-value" style="color:#F59E0B">£15.77</div><div class="kpi-change">avg per business</div></div>
+        <div class="kpi kpi-purple"><div class="kpi-label">Referral Payouts</div><div class="kpi-value" style="color:#8B5CF6">£2,160</div><div class="kpi-change">paid out this month</div></div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">💳 Revenue Breakdown by Plan</div>
+          <div class="rev-table">
+            <div class="rt-row"><div class="label">Starter (£15/mo) — 1,102 businesses</div><div class="value" style="color:#F0F6FF">£16,530</div></div>
+            <div class="rt-row"><div class="label">Growth (£29/mo) — 1,247 businesses</div><div class="value" style="color:#F0F6FF">£36,163</div></div>
+            <div class="rt-row"><div class="label">Advanced (£49/mo) — 265 businesses</div><div class="value" style="color:#F0F6FF">£12,985</div></div>
+            <div class="rt-row negative"><div class="label">Failed payments / refunds</div><div class="value">-£4,478</div></div>
+            <div class="rt-row total"><div class="label">Net Monthly Revenue</div><div class="value">£41,200</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📈 MRR Growth — Last 6 Months</div>
+          <div id="mrr-chart"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">🎯 Revenue by City</div>
+        <div id="city-rev-chart"></div>
+      </div>
+    </div>
+
+    <!-- CHURN RISK -->
+    <div class="page" id="page-churn">
+      <div class="page-header">📉 Churn Risk Monitor</div>
+      <div class="page-sub">Businesses that haven't tapped in 7+ days — at risk of cancelling</div>
+      <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:14px;margin-bottom:18px;font-size:13px;color:#EF4444;line-height:1.6">
+        💡 <strong>What to do:</strong> Contact these business owners this week. A quick call or WhatsApp showing them their analytics often re-engages them. Offer a free NFC card replacement if their card may be faulty.
+      </div>
+      <div class="kpi-grid" style="margin-bottom:14px">
+        <div class="kpi kpi-red"><div class="kpi-label">Not tapped 7+ days</div><div class="kpi-value" style="color:#EF4444">34</div><div class="kpi-change">highest risk</div></div>
+        <div class="kpi kpi-gold"><div class="kpi-label">Not tapped 4-6 days</div><div class="kpi-value" style="color:#F59E0B">61</div><div class="kpi-change">medium risk</div></div>
+        <div class="kpi kpi-blue"><div class="kpi-label">Revenue at risk</div><div class="kpi-value" style="color:#60A5FA">£1,190</div><div class="kpi-change">if all 34 cancel</div></div>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:#EF4444;margin-bottom:10px">🔴 Highest Risk — Not tapped in 10+ days</div>
+      <div class="churn-row"><div class="churn-emoji">🍽️</div><div class="churn-info"><div class="churn-name">Golden Spice Restaurant — Sheffield</div><div class="churn-meta">Growth Plan · £29/mo · Last tap: 14 days ago</div></div><div class="churn-days">14d</div><div style="display:flex;flex-direction:column;gap:5px"><button class="action-btn btn-critical" onclick="showToast('WhatsApp sent to Golden Spice!')">💬</button><button class="action-btn btn-blue" onclick="showToast('Analytics report sent!')">📊</button></div></div>
+      <div class="churn-row"><div class="churn-emoji">💈</div><div class="churn-info"><div class="churn-name">Zara Hair & Beauty — Coventry</div><div class="churn-meta">Starter Plan · £15/mo · Last tap: 12 days ago</div></div><div class="churn-days">12d</div><div style="display:flex;flex-direction:column;gap:5px"><button class="action-btn btn-critical" onclick="showToast('WhatsApp sent to Zara Hair!')">💬</button><button class="action-btn btn-blue" onclick="showToast('Analytics report sent!')">📊</button></div></div>
+      <div class="churn-row"><div class="churn-emoji">🏠</div><div class="churn-info"><div class="churn-name">Premier Homes — Nottingham</div><div class="churn-meta">Starter Plan · £15/mo · Last tap: 11 days ago</div></div><div class="churn-days">11d</div><div style="display:flex;flex-direction:column;gap:5px"><button class="action-btn btn-critical" onclick="showToast('WhatsApp sent to Premier Homes!')">💬</button><button class="action-btn btn-blue" onclick="showToast('Analytics report sent!')">📊</button></div></div>
+      <div class="churn-row"><div class="churn-emoji">☕</div><div class="churn-info"><div class="churn-name">Chai Lounge — Leeds</div><div class="churn-meta">Starter Plan · £15/mo · Last tap: 9 days ago</div></div><div class="churn-days">9d</div><div style="display:flex;flex-direction:column;gap:5px"><button class="action-btn btn-warning" onclick="showToast('WhatsApp sent to Chai Lounge!')">💬</button><button class="action-btn btn-blue" onclick="showToast('Analytics report sent!')">📊</button></div></div>
+    </div>
+
+    <!-- SUPPORT TICKETS -->
+    <div class="page" id="page-support">
+      <div class="page-header">🎧 Support Tickets</div>
+      <div class="page-sub">Messages and help requests from business owners</div>
+      <div class="kpi-grid" style="margin-bottom:14px">
+        <div class="kpi kpi-red"><div class="kpi-label">Open Tickets</div><div class="kpi-value" style="color:#EF4444">7</div><div class="kpi-change">needs response</div></div>
+        <div class="kpi kpi-gold"><div class="kpi-label">Avg Response Time</div><div class="kpi-value" style="color:#F59E0B">3.2h</div><div class="kpi-change">target: under 2h</div></div>
+        <div class="kpi kpi-green"><div class="kpi-label">Resolved This Week</div><div class="kpi-value" style="color:#10B981">23</div><div class="kpi-change">91% satisfaction</div></div>
+      </div>
+      <div class="ticket-row"><div class="ticket-icon">🔴</div><div class="ticket-info"><div class="ticket-title">NFC card not working — need replacement</div><div class="ticket-meta"><span class="ticket-status badge-critical">Urgent</span><span style="font-size:10px;color:#6B7FA3">Taste of Lahore · Bradford · Growth Plan</span></div><div class="ticket-desc">Customer tapping but nothing happening. Already tried reprogramming. Card may be physically damaged. Requesting free replacement.</div><div class="ticket-actions"><button class="action-btn btn-green" onclick="showToast('Replacement card dispatched!')">📬 Send Replacement</button><button class="action-btn btn-blue" onclick="showToast('Guide sent to owner!')">📱 Send NFC Guide</button><button class="action-btn btn-warning" onclick="showToast('Ticket replied!')">✉️ Reply</button></div></div></div>
+      <div class="ticket-row"><div class="ticket-icon">🟡</div><div class="ticket-info"><div class="ticket-title">How do I add a second NFC profile?</div><div class="ticket-meta"><span class="ticket-status badge-warning">Open</span><span style="font-size:10px;color:#6B7FA3">FitZone Leicester · Growth Plan</span></div><div class="ticket-desc">Owner wants to set up a separate profile for their exit door tag. On Growth plan (5 profiles allowed). Needs walkthrough.</div><div class="ticket-actions"><button class="action-btn btn-green" onclick="showToast('Setup guide sent!')">📋 Send Guide</button><button class="action-btn btn-blue" onclick="showToast('Video tutorial sent!')">▶️ Send Video</button></div></div></div>
+      <div class="ticket-row"><div class="ticket-icon">🟡</div><div class="ticket-info"><div class="ticket-title">Can I change my subscription plan?</div><div class="ticket-meta"><span class="ticket-status badge-warning">Open</span><span style="font-size:10px;color:#6B7FA3">Glamour Salon Birmingham · Starter Plan</span></div><div class="ticket-desc">Owner wants to upgrade from Starter to Growth to unlock in-app ordering. Already paying £15/mo — wants to switch.</div><div class="ticket-actions"><button class="action-btn btn-green" onclick="showToast('Upgrade link sent — they will save £2 first 2 months!')">⬆️ Send Upgrade Link</button><button class="action-btn btn-blue" onclick="showToast('Called owner!')">📞 Call Owner</button></div></div></div>
+      <div class="ticket-row" style="background:rgba(16,185,129,0.03);border-color:rgba(16,185,129,0.15)"><div class="ticket-icon">✅</div><div class="ticket-info"><div class="ticket-title">How do I programme my NFC cards?</div><div class="ticket-meta"><span class="ticket-status badge-resolved">Resolved</span><span style="font-size:10px;color:#6B7FA3">Chai & Chill Cafe Leicester · Starter Plan</span></div><div class="ticket-desc">Sent step-by-step NFC Tools guide. Owner confirmed cards working within 30 minutes.</div></div></div>
+    </div>
+
+    <!-- CITIES -->
+    <div class="page" id="page-cities">
+      <div class="page-header">📍 Growth by City</div>
+      <div class="page-sub">Where TaplinkPro is growing fastest</div>
+      <div class="panel">
+        <div class="panel-title">🏆 Top Cities by Businesses</div>
+        <div id="cities-chart"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">🚀 Fastest Growing This Month</div>
+        <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">📍 <strong>Birmingham</strong> — 47 new businesses (+34% MoM)</div><div class="act-time">🔥 Hot</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#60A5FA"></div><div class="act-text">📍 <strong>Manchester</strong> — 38 new businesses (+28% MoM)</div><div class="act-time">📈 Growing</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#F59E0B"></div><div class="act-text">📍 <strong>Bradford</strong> — 31 new businesses (+41% MoM)</div><div class="act-time">🔥 Hot</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#8B5CF6"></div><div class="act-text">📍 <strong>Coventry</strong> — 19 new businesses (+22% MoM)</div><div class="act-time">📈 Growing</div></div>
+      </div>
+    </div>
+
+    <!-- REFERRAL PAYOUTS -->
+    <div class="page" id="page-referrals">
+      <div class="page-header">🎁 Referral Payouts</div>
+      <div class="page-sub">Earnings paid to business owners who refer others</div>
+      <div class="kpi-grid" style="margin-bottom:14px">
+        <div class="kpi kpi-gold"><div class="kpi-label">Total Paid This Month</div><div class="kpi-value" style="color:#F59E0B">£2,160</div><div class="kpi-change">120 referrals</div></div>
+        <div class="kpi kpi-green"><div class="kpi-label">Total Paid All Time</div><div class="kpi-value" style="color:#10B981">£18,720</div><div class="kpi-change">1,040 referrals</div></div>
+        <div class="kpi kpi-blue"><div class="kpi-label">Top Earner</div><div class="kpi-value" style="color:#60A5FA">£486</div><div class="kpi-change">27 referrals total</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">💰 Recent Payouts</div>
+        <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">🍽️ Spice Garden Restaurant — referred 2 businesses</div><div class="act-time" style="color:#10B981;font-weight:700">+£36</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">🏋️ FitZone Leicester — referred 3 businesses</div><div class="act-time" style="color:#10B981;font-weight:700">+£54</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#10B981"></div><div class="act-text">💈 Glamour Hair Studio — referred 1 business</div><div class="act-time" style="color:#10B981;font-weight:700">+£18</div></div>
+        <div class="activity-row"><div class="act-dot" style="background:#F59E0B"></div><div class="act-text">🏭 Textile World Bradford — referral pending confirmation</div><div class="act-time" style="color:#F59E0B">Pending</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BIZ_DATA = [
+  {em:'🍽️',name:'Spice Garden Restaurant',meta:'Leicester · Growth · 147 taps today · Verified',status:'active'},
+  {em:'🏋️',name:'FitZone Leicester',meta:'Leicester · Advanced · 89 taps today · Verified',status:'active'},
+  {em:'💈',name:'Glamour Hair Studio',meta:'Leicester · Growth · 34 taps today · Verified',status:'active'},
+  {em:'🏭',name:'Textile World Bradford',meta:'Bradford · Advanced · 12 taps today · Verified',status:'new'},
+  {em:'☕',name:'Bean & Beyond Cafe',meta:'Nottingham · Starter · 8 taps today',status:'new'},
+  {em:'🏋️',name:'PowerHouse Gym',meta:'Manchester · Growth · 56 taps today · Verified',status:'active'},
+  {em:'💒',name:'Raza Wedding Photography',meta:'Leicester · Advanced · 22 taps today · Verified',status:'active'},
+  {em:'🚗',name:'Drive Safe with Ahmed',meta:'Leicester · Starter · 14 taps today',status:'active'},
+  {em:'🍽️',name:'Spice Palace',meta:'Manchester · Starter · Payment failed · 0 taps',status:'warn'},
+  {em:'🏋️',name:'FitLife Gym',meta:'Leicester · Growth · Data issue reported · 0 taps',status:'warn'},
+  {em:'🍽️',name:'Golden Spice Restaurant',meta:'Sheffield · Growth · Not tapped 14 days',status:'churn'},
+  {em:'💈',name:'Zara Hair & Beauty',meta:'Coventry · Starter · Not tapped 12 days',status:'churn'},
+];
+
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('page-' + id)?.classList.add('active');
+  if (el) el.classList.add('active');
+  if (id === 'overview') renderOverviewCharts();
+  if (id === 'businesses') renderBizList('all');
+  if (id === 'revenue') renderRevenueCharts();
+  if (id === 'cities') renderCitiesChart();
+}
+
+function makeChart(id, data, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const max = Math.max(...data.map(d => d.v), 1);
+  el.innerHTML = data.map(d => `
+    <div class="chart-row">
+      <div class="chart-label">${d.l}</div>
+      <div class="chart-bar-wrap"><div class="chart-bar" style="width:${Math.round(d.v/max*100)}%;background:${color}"></div></div>
+      <div class="chart-value" style="color:${color}">${typeof d.v === 'number' && d.v > 999 ? '£'+d.v.toLocaleString() : d.v}</div>
+    </div>`).join('');
+}
+
+function renderOverviewCharts() {
+  makeChart('growth-chart', [{l:'Mon',v:3},{l:'Tue',v:5},{l:'Wed',v:4},{l:'Thu',v:7},{l:'Fri',v:6},{l:'Sat',v:5},{l:'Sun',v:2}], '#10B981');
+  makeChart('plan-chart', [{l:'Starter',v:16530},{l:'Growth',v:36163},{l:'Advanced',v:12985}], '#60A5FA');
+}
+
+function renderRevenueCharts() {
+  makeChart('mrr-chart', [{l:'Oct',v:31200},{l:'Nov',v:34100},{l:'Dec',v:36800},{l:'Jan',v:37900},{l:'Feb',v:38800},{l:'Mar',v:41200}], '#10B981');
+  makeChart('city-rev-chart', [{l:'Leicester',v:8400},{l:'Birmingham',v:7200},{l:'Manchester',v:6100},{l:'Bradford',v:4900},{l:'London',v:4200},{l:'Leeds',v:3800}], '#F59E0B');
+}
+
+function renderCitiesChart() {
+  makeChart('cities-chart', [{l:'Leicester',v:487},{l:'Birmingham',v:392},{l:'Manchester',v:318},{l:'Bradford',v:241},{l:'London',v:198},{l:'Leeds',v:174},{l:'Nottingham',v:143},{l:'Coventry',v:121}], '#60A5FA');
+}
+
+function renderBizList(filter) {
+  const statusLabels = {active:'Active',new:'New',warn:'⚠️ Issue',churn:'Churn Risk'};
+  const statusClasses = {active:'status-active',new:'status-new',warn:'status-warn',churn:'status-churn'};
+  let items = BIZ_DATA;
+  if (filter !== 'all') {
+    if (filter === 'restaurant') items = BIZ_DATA.filter(b => b.em === '🍽️');
+    else if (filter === 'gym') items = BIZ_DATA.filter(b => b.em === '🏋️');
+    else if (filter === 'salon') items = BIZ_DATA.filter(b => b.em === '💈');
+    else if (filter === 'new') items = BIZ_DATA.filter(b => b.status === 'new');
+    else if (filter === 'issue') items = BIZ_DATA.filter(b => b.status === 'warn' || b.status === 'churn');
+  }
+  document.getElementById('biz-list').innerHTML = items.map(b => `
+    <div class="biz-row">
+      <div class="biz-emoji">${b.em}</div>
+      <div class="biz-info"><div class="biz-name">${b.name}</div><div class="biz-meta">${b.meta}</div></div>
+      <div class="biz-status ${statusClasses[b.status]}">${statusLabels[b.status]}</div>
+    </div>`).join('');
+}
+
+function filterBiz(cat, el) {
+  document.querySelectorAll('.biz-filter').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderBizList(cat);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'warn' ? ' warn' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+renderOverviewCharts();
+renderBizList('all');
+</script>
+</body>
+</html>
